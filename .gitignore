@@ -167,4 +167,6 @@ pip-log.txt
 
 # program ignore
 assets
-protected/config
+protected/config/*
+protected/runtime/*
+protected/data/*
