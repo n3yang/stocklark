@@ -1,0 +1,18 @@
+2013/08/28 17:12:03 [error] [php] include(WechatSessionToolInter.php): failed to open stream: No such file or directory (/Users/Sair/Projects/stocklark/slcode/protected/libraries/yii/framework/YiiBase.php:418)
+Stack trace:
+#0 /Users/Sair/Projects/stocklark/slcode/protected/components/WechatTool.php(7): spl_autoload_call()
+#1 /Users/Sair/Projects/stocklark/slcode/protected/libraries/yii/framework/YiiBase.php(418): include()
+#2 unknown(0): autoload()
+#3 /Users/Sair/Projects/stocklark/slcode/protected/controllers/SiteController.php(32): spl_autoload_call()
+#4 /Users/Sair/Projects/stocklark/slcode/protected/libraries/yii/framework/web/actions/CInlineAction.php(50): SiteController->actionIndex()
+#5 /Users/Sair/Projects/stocklark/slcode/protected/libraries/yii/framework/web/CController.php(309): CInlineAction->runWithParams()
+#6 /Users/Sair/Projects/stocklark/slcode/protected/libraries/yii/framework/web/CController.php(287): SiteController->runAction()
+#7 /Users/Sair/Projects/stocklark/slcode/protected/libraries/yii/framework/web/CController.php(266): SiteController->runActionWithFilters()
+#8 /Users/Sair/Projects/stocklark/slcode/protected/libraries/yii/framework/web/CWebApplication.php(276): SiteController->run()
+#9 /Users/Sair/Projects/stocklark/slcode/protected/libraries/yii/framework/web/CWebApplication.php(135): CWebApplication->runController()
+#10 /Users/Sair/Projects/stocklark/slcode/protected/libraries/yii/framework/base/CApplication.php(162): CWebApplication->processRequest()
+#11 /Users/Sair/Projects/stocklark/slcode/index.php(13): CWebApplication->run()
+REQUEST_URI=/index.php
+in /Users/Sair/Projects/stocklark/slcode/protected/components/WechatTool.php (7)
+in /Users/Sair/Projects/stocklark/slcode/protected/controllers/SiteController.php (32)
+in /Users/Sair/Projects/stocklark/slcode/index.php (13)
