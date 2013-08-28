@@ -8,17 +8,21 @@ return array(
 	// application components
 	'components'=>array(
 		'db'=>array(
-			'connectionString' => 'sqlite:'.dirname(__FILE__).'/../data/testdrive.db',
-		),
-		// uncomment the following to use a MySQL database
-		/*
-		'db'=>array(
-			'connectionString' => 'mysql:host=localhost;dbname=testdrive',
+			'connectionString' => 'mysql:host=localhost;dbname=stocklark',
 			'emulatePrepare' => true,
 			'username' => 'root',
 			'password' => '',
 			'charset' => 'utf8',
 		),
-		*/
+		'cache'	=> array(
+			'class'	=> 'system.caching.CApcCache',
+		),
+	),
+	'commandMap'=>array(
+		'send'	=> array('class'=>'application.commands.shell.WechatSendCommand'),
+	),
+	'import'=>array(
+		'application.models.*',
+		'application.components.*',
 	),
 );
