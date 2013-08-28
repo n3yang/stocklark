@@ -164,3 +164,7 @@ pip-log.txt
 
 # zend framework project file
 .zfproject.xml
+
+# program ignore
+assets
+protected/config
