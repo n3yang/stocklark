@@ -12,15 +12,12 @@ class WechatSendCommand extends CConsoleCommand {
 //		var_dump($res);
 //		echo 'hiiiiiiiiiiiiiiiiiiiiiiiiiiiiii';
 
-		
-		$wechatToolObj = new WechatTool();
-
 //下面是设置文件
 		$option = array(
 			'token'=>'mytoken',
-			'account'=>'',
+			'account'=>'@gmail.com',
 			'password'=>'',
-			"wechattool"=>$wechatToolObj /*这里是上面的接口类实例对象,也可以通过setWechatToolFun()设置*/
+			"wechattool"=> new WechatTool()
 		);
 		
 		

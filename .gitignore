@@ -170,3 +170,4 @@ assets
 protected/config/*
 protected/runtime/*
 protected/data/*
+protected/runtime/*
