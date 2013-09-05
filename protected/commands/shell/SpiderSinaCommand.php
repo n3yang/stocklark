@@ -7,9 +7,12 @@ class SpiderSinaCommand extends CConsoleCommand {
 		
 	}
 
-	public function actionGetTrade()
-	{
 
+	public function actionTrade()
+	{
+		$spider = new SpiderSina;
+		$rs = $spider->getTrade();
+		var_dump($rs);
 	}
 
 	public function actionUpdatePlayer($num=10)

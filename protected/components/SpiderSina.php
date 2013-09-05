@@ -25,13 +25,13 @@ class SpiderSina {
 		);
 		$res = file_get_contents(self::URI_TRADE.'?'.http_build_query($query));
 		if (empty($res)) {
-			//Yii::log('msg', 'info');
+			$this->log('no response!', __METHOD__);
 			return false;
 		}
 		// 
 		$result = json_decode($res, true);
 		if ($result['result']['status']['code']!='0' || empty($result['result']['data']['data'])){
-			//Yii::log('msg', 'info');
+			$this->log('no data!', __METHOD__);
 			return false;
 		}
 		return $result['result']['data'];
@@ -47,15 +47,19 @@ class SpiderSina {
 			);
 		$res = file_get_contents(self::URI_PLAYER.'?'.http_build_query($query));
 		if (empty($res)) {
-			// Yii::log('msg', 'info');
+			$this->log('no response!', __METHOD__);
 			return false;
 		}
 		$result = json_decode($res, true);
 		if ($result['result']['status']['code']!='0' || empty($result['result']['data']['data'])){
-			//Yii::log('msg', 'info');
+			$this->log('no data!', __METHOD__);
 			return false;
 		}
 		return $result['result']['data'];
 	}
+
+	private function log($text, $method='', $level='error')
+	{
+		Yii::log(__CLASS__.':'.$method.':'.$text, $level);
+	}
 }
-// $c = new SpiderSina();var_dump($c->fetchPlayer());
