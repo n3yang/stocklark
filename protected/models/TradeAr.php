@@ -4,11 +4,11 @@
  * This is the model class for table "trade".
  *
  * The followings are the available columns in table 'trade':
- * @property integer $id
+ * @property string $id
  * @property string $source
  * @property string $source_uid
  * @property double $price
- * @property integer $count
+ * @property integer $amount
  * @property string $stock_code
  * @property string $stock_name
  * @property integer $sell_buy
@@ -24,6 +24,13 @@
  */
 class TradeAr extends CActiveRecord
 {
+
+	const ACTION_BUY = 0;
+	const ACTION_SELL = 1;
+	const STATUS_0 = 0;
+	const STATUS_1 = 1;
+	const SOURCE_SINA = 'sina';
+
 	/**
 	 * Returns the static model of the specified AR class.
 	 * @param string $className active record class name.
@@ -50,8 +57,8 @@ class TradeAr extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('source, source_uid, price, count, stock_code, stock_name, sell_buy, time_deal, name, time_create, time_update', 'required'),
-			array('count, sell_buy, status', 'numerical', 'integerOnly'=>true),
+			array('source, source_uid, price, amount, stock_code, stock_name, sell_buy, time_deal, name, time_create, time_update', 'required'),
+			array('amount, sell_buy, status', 'numerical', 'integerOnly'=>true),
 			array('price', 'numerical'),
 			array('source, stock_code, stock_name, name', 'length', 'max'=>20),
 			array('source_uid', 'length', 'max'=>32),
@@ -59,7 +66,7 @@ class TradeAr extends CActiveRecord
 			array('st, sd', 'length', 'max'=>100),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, source, source_uid, price, count, stock_code, stock_name, sell_buy, time_deal, remark, note_content, name, st, sd, time_create, time_update, status', 'safe', 'on'=>'search'),
+			array('id, source, source_uid, price, amount, stock_code, stock_name, sell_buy, time_deal, remark, note_content, name, st, sd, time_create, time_update, status', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -84,7 +91,7 @@ class TradeAr extends CActiveRecord
 			'source' => 'Source',
 			'source_uid' => 'Source Uid',
 			'price' => 'Price',
-			'count' => 'Count',
+			'amount' => 'Amount',
 			'stock_code' => 'Stock Code',
 			'stock_name' => 'Stock Name',
 			'sell_buy' => 'Sell Buy',
@@ -115,7 +122,7 @@ class TradeAr extends CActiveRecord
 		$criteria->compare('source',$this->source,true);
 		$criteria->compare('source_uid',$this->source_uid,true);
 		$criteria->compare('price',$this->price);
-		$criteria->compare('count',$this->count);
+		$criteria->compare('amount',$this->amount);
 		$criteria->compare('stock_code',$this->stock_code,true);
 		$criteria->compare('stock_name',$this->stock_name,true);
 		$criteria->compare('sell_buy',$this->sell_buy);

@@ -1,10 +1,10 @@
 <?php
-Yii::import('application.libraries.*');
-require_once 'Wechat.class.php';
+// Yii::import('application.libraries.*');
+// require_once 'Wechat.class.php';
 /**
  * 微信调用接口类
  */
-class WechatTool implements WechatSessionToolInter,WechatAscToolInter,WechatFollowToolInter{
+class WechatTool {
 
 	function __construct(){
 	}
@@ -44,31 +44,31 @@ class WechatTool implements WechatSessionToolInter,WechatAscToolInter,WechatFoll
 		Yii::app()->cache->set("wechat_token", $token);
 	}
 
+	private function convert($user){
+		// mapping
+		$user['openid'] = $user['wechat_open_id'];
+		$user['fakeid'] = $user['wechat_fake_id'];
+		$user['subscribed'] = $user['wechat_followed'];
+		return $user;
+	}
+
 	/**
-	 * @name 判断指定Openid是否关联
-	 * @param string $Openid 指定Openid
+	 * @name 判断指定openId是否关联
+	 * @param string $openId 指定openId
 	 * @return boolean 返回逻辑判断结果
 	 * @see WechatAscToolInter::getAscStatusByOpenid()
 	 */
-	function getAscStatusByOpenid($Openid)
+	function getAscStatusByOpenid($openId)
 	{
-		$sql = "SELECT * FROM weixin_followusers WHERE weixin_followusers.openid='$Openid'";
-		$db_link = mysql_connect("127.0.0.1", "root", "password");
-		if (!$db_link) {
-			die("Connect Db Error!");
-		}
-		mysql_select_db("db_name", $db_link);
-		mysql_query("set names 'utf8'", $db_link);
-		// 	$query = "Select * from 'weixin_fakelist'";
-		$result = mysql_query($sql, $db_link);
-		$row = mysql_fetch_assoc($result);
-		if ($row[2]!="")
-		{
-			return $row;
-		}
-		else
-		{
+		$term = array(
+			'condition'	=> 'wechat_open_id=:open_id',
+			'params'	=> array(':open_id'=>$openId),
+		);
+		$rs = UserAr::model()->find($term);
+		if (!$rs){
 			return false;
+		} else {
+			return $this->convert($rs->getAttributes());
 		}
 	}
 
@@ -80,21 +80,16 @@ class WechatTool implements WechatSessionToolInter,WechatAscToolInter,WechatFoll
 	 */
 	function getAscStatusByFakeid($fakeid)
 	{
-		$sql = "SELECT * FROM weixin_followusers WHERE weixin_followusers.fakeid='$fakeid'";
-		$db_link = mysql_connect("127.0.0.1", "root", "");
-		if (!$db_link) {
-			die("Connect Db Error!");
-		}
-		mysql_select_db("db_name", $db_link);
-		mysql_query("set names 'utf8'", $db_link);
-		$result = mysql_query($sql, $db_link);
-		$row = mysql_fetch_assoc($result);
-		if ($row) {
-			return $row;
-		}
-		else
-		{
+
+		$term = array(
+			'condition'	=> 'wechat_fake_id=:fake_id',
+			'params'	=> array(':fake_id'=>$fakeid),
+		);
+		$rs = UserAr::model()->find($term);
+		if (!$rs){
 			return false;
+		} else {
+			return $this->convert($rs->getAttributes());
 		}
 	}
 
@@ -108,16 +103,20 @@ class WechatTool implements WechatSessionToolInter,WechatAscToolInter,WechatFoll
 	 */
 	function setAssociation($openid, $fakeid, $detailInfo)
 	{
-		$sql = "SELECT * FROM weixin_followusers WHERE weixin_followusers.openid='$openid'";
-		$insertsql = "UPDATE weixin_followusers SET fakeid='$fakeid',name='$detailInfo[NickName]',gender='$detailInfo[Sex]'  WHERE weixin_followusers.openid='$openid'";
-		$db_link = mysql_connect("127.0.0.1", "root", "");
-		if (!$db_link) {
-			die("Connect Db Error!");
+
+		$condition = array(
+			'condition'	=> 'wechat_open_id=:open_id',
+			'params'	=> array(':open_id'=>$openid)
+		);
+		$ua = UserAr::model()->find($condition);
+		if (!$ua){
+			return false;
+		} else {
+			$ua->wechat_fake_id = $fakeid;
+			$ua->name = $detailInfo['NickName'];
+			$ua->gender = $detailInfo['Sex'];
+			return $ua->save();
 		}
-		mysql_select_db("db_name", $db_link);
-		mysql_query("set names 'utf8'", $db_link);
-		$result = mysql_query($insertsql, $db_link);
-		return $result;
 	}
 
 	/**
@@ -128,6 +127,19 @@ class WechatTool implements WechatSessionToolInter,WechatAscToolInter,WechatFoll
 	 */
 	function followAddAction($openid)
 	{
+
+		$condition = array(
+			'condition'	=> 'wechat_open_id=:open_id',
+			'params'	=> array(':open_id'=>$openid)
+		);
+		$ua = UserAr::model()->find($condition);
+		if (!$ua){
+			return false;
+		} else {
+			$ua->wechat_followed = 1;
+		}
+
+
 		$sql = "SELECT id,fakeid,subscribed FROM weixin_followusers WHERE weixin_followusers.openid='$openid'";
 		$updatesql = "UPDATE weixin_followusers SET weixin_followusers.subscribed=1 WHERE weixin_followusers.openid='$openid'";
 		$insertsql = "INSERT INTO weixin_followusers(openid,subscribed) VALUE ('$openid',1)";
@@ -160,14 +172,17 @@ class WechatTool implements WechatSessionToolInter,WechatAscToolInter,WechatFoll
 	 * @see WechatFollowToolInter::followCancelAction()
 	 */
 	function followCancelAction($openid) {
-		$updatesql = "UPDATE weixin_followusers SET weixin_followusers.subscribed=0 WHERE weixin_followusers.openid='$openid'";
-		$db_link = mysql_connect("127.0.0.1", "root", "");
-		if (!$db_link) {
-			die("Connect Db Error!");
+		$condition = array(
+			'condition'	=> 'wechat_open_id=:open_id',
+			'params'	=> array(':open_id'=>$openid)
+		);
+		$ua = UserAr::model()->find($condition);
+		if (!$ua){
+			return false;
+		} else {
+			$ua->wechat_followed = 0;
+			return $ua->save();
 		}
-		mysql_select_db("db_name", $db_link);
-		mysql_query("set names 'utf8'", $db_link);
-		$result = mysql_query($updatesql, $db_link);
 	}
 
 }

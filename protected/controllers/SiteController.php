@@ -30,6 +30,8 @@ class SiteController extends Controller
 		// renders the view file 'protected/views/site/index.php'
 		// using the default layout 'protected/views/layouts/main.php'
 		$this->render('index');
+		$wt = new WechatTool;
+		var_dump($wt->setAssociation(123,123,array('NickName'=>'hi')));
 	}
 
 	/**

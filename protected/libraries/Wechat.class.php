@@ -88,7 +88,7 @@ class Wechat {
      * @var array
      * @example array('token'=>'微信接口密钥','account'=>'微信公共平台账号','password'=>'微信公共平台密码','webtoken'=>"微信公共平台网页url的token");
      */
-    private $wechatOptions=array('token'=>'rqerwer','account'=>'ligboy@gmail.com','password'=>'wwwwww','session'=>"default");	//
+    private $wechatOptions=array('token'=>'rqerwer','account'=>'ligboy@gmail.com','password'=>'wwwwww','session'=>"default");   //
     public $webtoken = '';
     public $debug =  false;  //调试开关
     public $protocol = "https";  //使用协议类型 http or  https
@@ -576,13 +576,13 @@ class Wechat {
      * @return $this
      * @example 数组结构:
      *  array(
-     *  	[0]=>array(
-     *  		'Title'=>'msg title',
-     *  		'Description'=>'summary text',
-     *  		'PicUrl'=>'http://www.domain.com/1.jpg',
-     *  		'Url'=>'http://www.domain.com/1.html'
-     *  	),
-     *  	[1]=>....
+     *      [0]=>array(
+     *          'Title'=>'msg title',
+     *          'Description'=>'summary text',
+     *          'PicUrl'=>'http://www.domain.com/1.jpg',
+     *          'Url'=>'http://www.domain.com/1.html'
+     *      ),
+     *      [1]=>....
      *  )
      */
     public function news($newsData=array())
@@ -659,7 +659,7 @@ class Wechat {
         }
         else
         {
-// 			return false;
+//          return false;
             return $result['ErrCode'];
         }
     }
@@ -669,8 +669,8 @@ class Wechat {
      */
     private function doAssociationAction()
     {
-        //var_dump($this->_passiveAssociationSwitch && Wechat::MSGTYPE_EVENT!=$this->getRevType() &&	is_object($this->_wechatcallbackFuns) && method_exists($this->_wechatcallbackFuns, "getAscStatusByOpenid") && method_exists($this->_wechatcallbackFuns, "setAssociation") && !$this->_wechatcallbackFuns->getAscStatusByOpenid($this->getRevFrom()));
-        if ($this->_passiveAssociationSwitch && Wechat::MSGTYPE_EVENT!=$this->getRevType() &&	is_object($this->_wechatcallbackFuns) && method_exists($this->_wechatcallbackFuns, "getAscStatusByOpenid") && method_exists($this->_wechatcallbackFuns, "setAssociation") && !$this->_wechatcallbackFuns->getAscStatusByOpenid($this->getRevFrom()))
+        //var_dump($this->_passiveAssociationSwitch && Wechat::MSGTYPE_EVENT!=$this->getRevType() &&    is_object($this->_wechatcallbackFuns) && method_exists($this->_wechatcallbackFuns, "getAscStatusByOpenid") && method_exists($this->_wechatcallbackFuns, "setAssociation") && !$this->_wechatcallbackFuns->getAscStatusByOpenid($this->getRevFrom()));
+        if ($this->_passiveAssociationSwitch && Wechat::MSGTYPE_EVENT!=$this->getRevType() &&   is_object($this->_wechatcallbackFuns) && method_exists($this->_wechatcallbackFuns, "getAscStatusByOpenid") && method_exists($this->_wechatcallbackFuns, "setAssociation") && !$this->_wechatcallbackFuns->getAscStatusByOpenid($this->getRevFrom()))
         {
             //$messageList = $this->getMessage();
             $messageList = $this->getMessage(0, 40, 0);
@@ -1413,8 +1413,8 @@ class Wechat {
                     CURLOPT_POST            => false,            // i am sending post data
                     CURLOPT_SSL_VERIFYHOST => 0,            // don't verify ssl
                     CURLOPT_SSL_VERIFYPEER => false,        //
-// 						CURLOPT_FILE => $fp, //目标文件保存路径
-// 						CURLOPT_RETURNTRANSFER => 1
+//                      CURLOPT_FILE => $fp, //目标文件保存路径
+//                      CURLOPT_RETURNTRANSFER => 1
                 );
                 curl_setopt_array($ch, $options);
                 $reqCookiesString = "";
@@ -1523,7 +1523,7 @@ class Wechat {
     }
 
     /**
-     * @name 获取公共消息时间线列表
+     * @name 获取公共消息时间线列表(遗留下来兼容)
      * @param int|number $day 获取几日内的消息参数（0:当天;1:昨天;2:前天;3:最近5天.默认0）
      * @param int|number $count 获取消息数量限制.默认100
      * @param int|number $offset 获取消息开始位置,差不多是偏移分页的样子.默认是0
@@ -1532,30 +1532,10 @@ class Wechat {
      * @param string $session
      * @return mixed|boolean
      */
-/*    public function getMessageAjax($day=0, $count=100, $offset=1, $msgid=999999999, $timeline=1, $session=null)
+    public function getMessageAjax($day=0, $count=100, $offset=1, $msgid=999999999, $timeline=1, $session=null)
     {
-        $this->processSession($session);
-        if ($this->_cookies[$session]||true===$this->login($session))
-        {
-            $url = $this->protocol."://mp.weixin.qq.com/cgi-bin/getmessage?t=ajax-message&lang=zh_CN&count=$count&timeline=".($timeline?"1":"")."&day=$day&star=&frommsgid=$msgid&cgi=getmessage&offset=".intval($offset);
-            $this->curlInit("single");
-            $postfieldArray = array(
-                "token"	=>	$this->webtoken,
-                "ajax"	=>	1
-            );
-            $header = array(
-                "X-Requested-With" => "XMLHttpRequest"
-            );
-            $result = $this->_curlHttpObject->post($url, $postfieldArray, $this->protocol."://mp.weixin.qq.com/cgi-bin/", $this->_cookies[$session], $header);
-            if ($result) {
-                return json_decode($result, true);
-            }
-            else
-            {
-                return false;
-            }
-        }
-    }*/
+        return $this->getMessage($day, $count, $offset, $session);
+    }
 
     /**
      * @name 得到确定的某条消息(因为微信两个时间戳有时不同, 所以这个接口效果不完美)
@@ -1597,7 +1577,7 @@ class Wechat {
                 {
                     for($i=0;$i<$singleMessageCount;$i++)
                     {
-                        if ( $userInfo['fakeid']==$singleMessage[0]['fakeId'] && $datetime == $singleMessage[$i]['dateTime'])
+                        if ( $userInfo['fakeid']==$singleMessage[0]['fakeid'] && $datetime == $singleMessage[$i]['date_time'])
                         {
                             return $singleMessage[$i];
                         }
@@ -1605,7 +1585,7 @@ class Wechat {
                     }
                     for($i=0;$i<$singleMessageCount;$i++)
                     {
-                        if( $userInfo['fakeid']==$singleMessage[$i]['fakeId'] && $singleMessage[$i]['type']==$typeList[$type])
+                        if( $userInfo['fakeid']==$singleMessage[$i]['fakeid'] && $singleMessage[$i]['type']==$typeList[$type])
                         {
 
                             return $singleMessage[$i];
@@ -1643,22 +1623,25 @@ class Wechat {
      * @name 得到指定分组的用户列表
      * @param int|number $groupid 用户组id
      * @param int $pagesize 分页大小
-     * @param string $session
-     * @return Ambigous <boolean, string, mixed>
+     * @param int $pageindex 页数
+     * @param string $session 会话通道
+     * @return Ambigous <boolean, array>
      */
-    public function getFriendList($groupid=0, $pagesize=100, $session=null)
+    public function getFriendList($groupid=0, $pagesize=100, $pageindex=0, $session=null)
     {
         $this->processSession($session);
-        $url = $this->protocol."://mp.weixin.qq.com/cgi-bin/contactmanagepage?token=$this->webtoken&t=wxm-friend&pagesize=$pagesize&groupid=$groupid";
-        $referer = $this->protocol."://mp.weixin.qq.com/";
+        $url = $this->protocol.'://mp.weixin.qq.com/cgi-bin/contactmanage?t=user/index&pagesize='.$pagesize.'&pageidx='.$pageindex.'&type=0&groupid='.$groupid.'&token='.$this->webtoken.'&lang=zh_CN';
+        $referer = $this->protocol."://mp.weixin.qq.com/cgi-bin/contactmanage?";
         $this->curlInit("single");
         $response = $this->_curlHttpObject->get($url, $referer, $this->_cookies[$session]);
-        $tmp = "";
-        if (preg_match('%<script id="json-friendList" type="json/text">([\s\S]*?)</script>%', $response, $match)) {
-            $tmp = json_decode($match[1], true);
+        if ($match = Wechat::getTextArea($response,'friendsList : (', ').contacts,' ))
+        {
+            return json_decode($match, true);
         }
-        return empty($tmp)?false:$tmp;
-
+        else
+        {
+            return false;
+        }
     }
 
     /**
@@ -1976,7 +1959,7 @@ class CurlHttp {
     private $_singleoptions = array(
         CURLOPT_RETURNTRANSFER => true,         // return web page
         CURLOPT_HEADER         => true,        // don't return headers
-// 			CURLOPT_FOLLOWLOCATION => true,         // follow redirects
+//          CURLOPT_FOLLOWLOCATION => true,         // follow redirects
         CURLOPT_NOSIGNAL      =>true,
         CURLOPT_ENCODING       => "",           // handle all encodings
         CURLOPT_USERAGENT      => "",           // who am i
@@ -1990,7 +1973,7 @@ class CurlHttp {
     private $_rolloptions = array(
         CURLOPT_RETURNTRANSFER => true,         // return web page
         CURLOPT_HEADER         => false,        // don't return headers
-// 			CURLOPT_FOLLOWLOCATION => true,         // follow redirects
+//          CURLOPT_FOLLOWLOCATION => true,         // follow redirects
         CURLOPT_NOSIGNAL      =>true,
         CURLOPT_ENCODING       => "",           // handle all encodings
         CURLOPT_USERAGENT      => "",           // who am i
@@ -2115,7 +2098,7 @@ class CurlHttp {
         $options = array(
             CURLOPT_RETURNTRANSFER => true,         // return web page
             CURLOPT_HEADER         => true,        // don't return headers
-// 				CURLOPT_FOLLOWLOCATION => true,         // follow redirects
+//              CURLOPT_FOLLOWLOCATION => true,         // follow redirects
             CURLOPT_ENCODING       => "",           // handle all encodings
             CURLOPT_USERAGENT      => "",     // who am i
             CURLOPT_AUTOREFERER    => true,         // set referer on redirect
@@ -2167,7 +2150,7 @@ class CurlHttp {
         $options = array(
             CURLOPT_RETURNTRANSFER => true,         // return web page
             CURLOPT_HEADER         => true,        // don't return headers
-// 				CURLOPT_FOLLOWLOCATION => true,         // follow redirects
+//              CURLOPT_FOLLOWLOCATION => true,         // follow redirects
             CURLOPT_ENCODING       => "",           // handle all encodings
             CURLOPT_USERAGENT      => "",     // who am i
             CURLOPT_AUTOREFERER    => true,         // set referer on redirect
@@ -2213,7 +2196,7 @@ class CurlHttp {
     {
         $this->_requstItems = $requestArray;
         $requestArrayKeys = array_keys($requestArray);
-        /* 		$requestArray = array(
+        /*      $requestArray = array(
          array(
                  'url' => "",
                  'method' => "post",
