@@ -40,12 +40,16 @@ class SubscribeAr extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('user_id, time_create, time_over', 'required'),
+			array('user_id, time_over', 'required'),
 			array('user_id, type, status', 'numerical', 'integerOnly'=>true),
 			array('feature', 'length', 'max'=>255),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
 			array('id, user_id, type, feature, time_create, time_over, status', 'safe', 'on'=>'search'),
+			
+			// auto record the time on creating
+			array('time_create', 'default', 'value'=>new CDbExpression('NOW()'),
+				'setOnEmpty'=>false, 'on'=>'insert'),
 		);
 	}
 

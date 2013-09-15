@@ -42,13 +42,19 @@ class UserAr extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('time_create, time_update', 'required'),
 			array('wechat_followed, gender, status', 'numerical', 'integerOnly'=>true),
 			array('name', 'length', 'max'=>100),
 			array('wechat_open_id, wechat_fake_id', 'length', 'max'=>32),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
 			array('id, name, wechat_open_id, wechat_fake_id, wechat_followed, gender, status, time_create, time_update', 'safe', 'on'=>'search'),
+			
+			// auto record the time on creating
+			array('time_create', 'default', 'value'=>new CDbExpression('NOW()'),
+				'setOnEmpty'=>false, 'on'=>'insert'),
+			// auto record the time on updating
+			array('time_update', 'default', 'value'=>new CDbExpression('NOW()'),
+				'setOnEmpty'=>false, 'on'=>array('update','insert')),
 		);
 	}
 

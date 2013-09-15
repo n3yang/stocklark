@@ -14,7 +14,7 @@ class SpiderSinaCommand extends CConsoleCommand {
 	public function actionUpdateTrade()
 	{
 		$spider = new SpiderSina;
-		$trades = $spider->getTrade('2013-09-06');
+		$trades = $spider->getTrade('2013-09-09');
 		if (!$trades) {
 			Yii::log('fault to get sina players', 'error');
 			echo 'fault';
@@ -48,11 +48,9 @@ class SpiderSinaCommand extends CConsoleCommand {
 				$oTrade->name = $ds[$i]['name']; //
 				$oTrade->st = $ds[$i]['qs_name']; // 
 				$oTrade->sd = $ds[$i]['yingyebu']; //
-				$oTrade->time_create = new CDbExpression('NOW()');
-				$oTrade->time_update = new CDbExpression('NOW()');
 				$rs = $oTrade->save();
 				if (!$rs) {
-					Yii::log('fault to db insert:'.$oTrade->getError(), 'error');
+					Yii::log('fault to db insert:'.var_export($oTrade->getErrors(),1), 'error');
 				}
 			} // end for
 			echo 'done!';
@@ -83,9 +81,6 @@ class SpiderSinaCommand extends CConsoleCommand {
 						'params'	=> array(':source_uid'=>$player['sid'], ':source'=>'sina'),
 					);
 					$oPlayer = PlayerAr::model()->find($criteria);
-					if (!$oPlayer->time_create) {
-						$oPlayer->time_create = new CDbExpression('NOW()');;
-					}
 					$oPlayer->source_uid = $player['sid'];
 					$oPlayer->name = $player['user_info']['xingming'];
 					$oPlayer->st = $player['user_info']['qs_name'];
@@ -97,10 +92,9 @@ class SpiderSinaCommand extends CConsoleCommand {
 					$oPlayer->profit_ratio_d5 = $player['d5_profit_ratio'];
 					$oPlayer->profit_ratio_d20 = $player['d20_profit_ratio'];
 					$oPlayer->profit_ratio_total = $player['total_profit_ratio'];
-					$oPlayer->time_update = new CDbExpression('NOW()');
 					$rs = $oPlayer->save();
 					if (!$rs) {
-						Yii::log('fault to insert:'.$oPlayer->getError(), 'error');
+						Yii::log('fault to insert:'.$oPlayer->getErrors(), 'error');
 					}
 				}
 			} // end foreach
@@ -149,7 +143,6 @@ class SpiderSinaCommand extends CConsoleCommand {
 					$oMessageQueue = new MessageQueueAr();
 					$oMessageQueue->user_id = $user_id;
 					$oMessageQueue->content = $content;
-					$oMessageQueue->time_create = $oMessageQueue->time_update = new CDbExpression('NOW()');
 					$oMessageQueue->status = 0;
 					$oMessageQueue->save();
 				}

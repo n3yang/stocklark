@@ -57,7 +57,7 @@ class TradeAr extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('source, source_uid, price, amount, stock_code, stock_name, sell_buy, time_deal, name, time_create, time_update', 'required'),
+			array('source, source_uid, price, amount, stock_code, stock_name, sell_buy, time_deal, name', 'required'),
 			array('amount, sell_buy, status', 'numerical', 'integerOnly'=>true),
 			array('price', 'numerical'),
 			array('source, stock_code, stock_name, name', 'length', 'max'=>20),
@@ -67,6 +67,13 @@ class TradeAr extends CActiveRecord
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
 			array('id, source, source_uid, price, amount, stock_code, stock_name, sell_buy, time_deal, remark, note_content, name, st, sd, time_create, time_update, status', 'safe', 'on'=>'search'),
+			
+			// auto record the time on creating
+			array('time_create', 'default', 'value'=>new CDbExpression('NOW()'),
+				'setOnEmpty'=>false, 'on'=>'insert'),
+			// auto record the time on updating
+			array('time_update', 'default', 'value'=>new CDbExpression('NOW()'),
+				'setOnEmpty'=>false, 'on'=>array('update','insert')),
 		);
 	}
 
@@ -140,4 +147,16 @@ class TradeAr extends CActiveRecord
 			'criteria'=>$criteria,
 		));
 	}
+
+	// public function behaviors(){
+	// 	return array(
+	// 		'CTimestampBehavior' => array(
+	// 			'class' => 'zii.behaviors.CTimestampBehavior',
+	// 			'createAttribute' => 'time_create',
+	// 			'updateAttribute' => 'time_update',
+	// 			'timestampExpression'	=> new CDbExpression('NOW()'),
+	// 			'setUpdateOnCreate'	=> true,
+	// 		)
+	// 	);
+	// }
 }

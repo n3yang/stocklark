@@ -39,13 +39,20 @@ class MessageQueueAr extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('user_id, content, time_create, time_update', 'required'),
+			array('user_id, content', 'required'),
 			array('status', 'numerical', 'integerOnly'=>true),
 			array('user_id', 'length', 'max'=>32),
 			array('content', 'length', 'max'=>250),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
 			array('id, user_id, content, time_create, time_update, status', 'safe', 'on'=>'search'),
+
+			// auto record the time on creating
+			array('time_create', 'default', 'value'=>new CDbExpression('NOW()'),
+				'setOnEmpty'=>false, 'on'=>'insert'),
+			// auto record the time on updating
+			array('time_update', 'default', 'value'=>new CDbExpression('NOW()'),
+				'setOnEmpty'=>false, 'on'=>array('update','insert')),
 		);
 	}
 

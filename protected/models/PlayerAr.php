@@ -48,7 +48,7 @@ class PlayerAr extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('source_uid, name, time_create, time_update', 'required'),
+			array('source_uid, name', 'required'),
 			array('source, name, profit_ratio_d1, profit_ratio_d5, profit_ratio_d20, profit_ratio_total', 'length', 'max'=>20),
 			array('source_uid', 'length', 'max'=>32),
 			array('st, sd', 'length', 'max'=>100),
@@ -57,6 +57,13 @@ class PlayerAr extends CActiveRecord
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
 			array('id, source, source_uid, name, st, sd, title, intro, certificate, profit_ratio_d1, profit_ratio_d5, profit_ratio_d20, profit_ratio_total, time_create, time_update', 'safe', 'on'=>'search'),
+			
+			// auto record the time on creating
+			array('time_create', 'default', 'value'=>new CDbExpression('NOW()'),
+				'setOnEmpty'=>false, 'on'=>'insert'),
+			// auto record the time on updating
+			array('time_update', 'default', 'value'=>new CDbExpression('NOW()'),
+				'setOnEmpty'=>false, 'on'=>array('update','insert')),
 		);
 	}
 
