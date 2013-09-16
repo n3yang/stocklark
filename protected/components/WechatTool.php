@@ -60,6 +60,9 @@ class WechatTool {
 	 */
 	function getAscStatusByOpenid($openId)
 	{
+		if (!$openId) {
+			return false;
+		}
 		$term = array(
 			'condition'	=> 'wechat_open_id=:open_id',
 			'params'	=> array(':open_id'=>$openId),
@@ -74,16 +77,18 @@ class WechatTool {
 
 	/**
 	 * @name 判断指定fakeid是否关联
-	 * @param string $fakeid 指定fakeid
+	 * @param string $fakeId 指定fakeId
 	 * @return boolean 返回逻辑判断结果
 	 * @see WechatAscToolInter::getAscStatusByFakeid()
 	 */
-	function getAscStatusByFakeid($fakeid)
+	function getAscStatusByFakeid($fakeId)
 	{
-
+		if (!$fakeId) {
+			return false;
+		}
 		$term = array(
 			'condition'	=> 'wechat_fake_id=:fake_id',
-			'params'	=> array(':fake_id'=>$fakeid),
+			'params'	=> array(':fake_id'=>$fakeId),
 		);
 		$rs = UserAr::model()->find($term);
 		if (!$rs){
@@ -95,24 +100,26 @@ class WechatTool {
 
 	/**
 	 * @name 设置fakeid与Openid的关联
-	 * @param string $openid Openid
-	 * @param string $fakeid fakeid
+	 * @param string $openId openId
+	 * @param string $fakeId fakeId
 	 * @param string $detailInfo 用户详细信息(可选)
      * @return resource
      * @see WechatAscToolInter::setAssociation()
 	 */
-	function setAssociation($openid, $fakeid, $detailInfo)
+	function setAssociation($openId, $fakeId, $detailInfo)
 	{
-
+		if (!$openId or !$fakeId){
+			return false;
+		}
 		$condition = array(
 			'condition'	=> 'wechat_open_id=:open_id',
-			'params'	=> array(':open_id'=>$openid)
+			'params'	=> array(':open_id'=>$openId)
 		);
 		$ua = UserAr::model()->find($condition);
 		if (!$ua){
 			return false;
 		} else {
-			$ua->wechat_fake_id = $fakeid;
+			$ua->wechat_fake_id = $fakeId;
 			$ua->name = $detailInfo['NickName'];
 			$ua->gender = $detailInfo['Sex'];
 			return $ua->save();
@@ -121,60 +128,37 @@ class WechatTool {
 
 	/**
 	 * @name 用户关注执行动作
-	 * @param string $openid Openid
+	 * @param string $openId openId
      * @return bool|resource
      * @see WechatFollowToolInter::followAddAction()
 	 */
-	function followAddAction($openid)
+	function followAddAction($openId)
 	{
-
+		if (!$openId) {
+			return false;
+		}
 		$condition = array(
 			'condition'	=> 'wechat_open_id=:open_id',
-			'params'	=> array(':open_id'=>$openid)
+			'params'	=> array(':open_id'=>$openId)
 		);
 		$ua = UserAr::model()->find($condition);
-		if (!$ua){
-			return false;
-		} else {
-			$ua->wechat_followed = 1;
-		}
-
-
-		$sql = "SELECT id,fakeid,subscribed FROM weixin_followusers WHERE weixin_followusers.openid='$openid'";
-		$updatesql = "UPDATE weixin_followusers SET weixin_followusers.subscribed=1 WHERE weixin_followusers.openid='$openid'";
-		$insertsql = "INSERT INTO weixin_followusers(openid,subscribed) VALUE ('$openid',1)";
-		$db_link = mysql_connect("127.0.0.1", "root", "");
-		if (!$db_link) {
-			die("Connect Db Error!");
-		}
-		mysql_select_db("db_name", $db_link);
-		mysql_query("set names 'utf8'", $db_link);
-		$result = mysql_query($sql, $db_link);
-		$row = mysql_fetch_assoc($result);
-		var_dump($row);
-		if ($row[2]==="0")
-		{
-				return mysql_query($updatesql, $db_link);
-		}
-		elseif($row[2]==="1")
-		{
-			return true;
-		}
-		else
-		{
-			return mysql_query($insertsql, $db_link);
-		}
+		$ua->wechat_open_id = $openId;
+		$ua->wechat_followed = 1;
+		return $ua->save();
 	}
 
 	/**
 	 * @name 取消关注执行动作
-	 * @param string $openid Openid
+	 * @param string $openId openId
 	 * @see WechatFollowToolInter::followCancelAction()
 	 */
-	function followCancelAction($openid) {
+	function followCancelAction($openId) {
+		if (!$openId){
+			return  false;
+		}
 		$condition = array(
 			'condition'	=> 'wechat_open_id=:open_id',
-			'params'	=> array(':open_id'=>$openid)
+			'params'	=> array(':open_id'=>$openId)
 		);
 		$ua = UserAr::model()->find($condition);
 		if (!$ua){

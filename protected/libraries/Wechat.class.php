@@ -88,7 +88,7 @@ class Wechat {
      * @var array
      * @example array('token'=>'微信接口密钥','account'=>'微信公共平台账号','password'=>'微信公共平台密码','webtoken'=>"微信公共平台网页url的token");
      */
-    private $wechatOptions=array('token'=>'rqerwer','account'=>'ligboy@gmail.com','password'=>'wwwwww','session'=>"default");   //
+    private $wechatOptions=array('token'=>'','account'=>'','password'=>'','session'=>"default");   //
     public $webtoken = '';
     public $debug =  false;  //调试开关
     public $protocol = "https";  //使用协议类型 http or  https

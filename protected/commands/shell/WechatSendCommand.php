@@ -13,15 +13,10 @@ class WechatSendCommand extends CConsoleCommand {
 //		echo 'hiiiiiiiiiiiiiiiiiiiiiiiiiiiiii';
 
 //下面是设置文件
-		$option = array(
-			'token'=>'mytoken',
-			'account'=>'@gmail.com',
-			'password'=>'',
-			"wechattool"=> new WechatTool()
-		);
+
 		
 		
-		$wechatObj = new Wechat($option);
+		$wechatObj = new WechatCom();
 		$wechatObj->positiveInit();
 		$singleresult = $wechatObj->send("2345861760", "你好");
 		
