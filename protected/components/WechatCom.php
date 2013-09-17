@@ -14,4 +14,5 @@ Class WechatCom extends Wechat
 		);
 		return parent::__construct($option);
 	}
+
 }
