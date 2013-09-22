@@ -2,11 +2,6 @@
 
 class SpiderSinaCommand extends CConsoleCommand {
 
-	public function __construct()
-	{
-		
-	}
-
 	/**
 	 * get the trading log: catch and save
 	 * @return bool true/false

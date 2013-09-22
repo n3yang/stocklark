@@ -13,12 +13,14 @@ class WechatCommand extends CConsoleCommand {
 //		echo 'hiiiiiiiiiiiiiiiiiiiiiiiiiiiiii';
 
 //下面是设置文件
-
-		
-		
-
 		
 	// }
+
+	public function actionLogout($session="default")
+	{
+		Yii::app()->cache->set("wechat_cookies".$session, '');
+		Yii::app()->cache->set("wechat_token", '');
+	}
 
 	/**
 	 * keep alive for wechat
@@ -41,11 +43,15 @@ class WechatCommand extends CConsoleCommand {
 	{
 		$criteria = array(
 			'condition' => 'status=:need',
-
-
 		);
 	}
 
+	/**
+	 * send test message
+	 * @param  string $fakeId  faked user id
+	 * @param  string $message content
+	 * @return bool          true/false
+	 */
 	public function actionSendTest($fakeId='', $message='')
 	{
 		$fakeId = "2345861760";

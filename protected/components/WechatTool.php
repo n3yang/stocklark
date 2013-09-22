@@ -22,7 +22,7 @@ class WechatTool {
 	 * @see WechatSessionToolInter::getToken()
 	 */
 	public function getToken() {
-		return Yii::app()->cache->get("wechat_token");  
+		return Yii::app()->cache->get("wechat_token");
 	}
 
     /**
@@ -32,7 +32,7 @@ class WechatTool {
      * @see WechatSessionToolInter::setCookies()
      */
 	public function setCookies($Cookies, $session='default') {
-		Yii::app()->cache->set("wechat_cookies".$session, $Cookies);
+		return Yii::app()->cache->set("wechat_cookies".$session, $Cookies);
 	}
 
 	/**
@@ -41,7 +41,7 @@ class WechatTool {
 	 * @see WechatSessionToolInter::setToken()
 	 */
 	public function setToken($token) {
-		Yii::app()->cache->set("wechat_token", $token);
+		return Yii::app()->cache->set("wechat_token", $token);
 	}
 
 	private function convert($user){

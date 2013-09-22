@@ -1,5 +1,7 @@
 <?php
-
+/**
+ * The spider of sina finance
+ */
 class SpiderSina {
 	
 
@@ -35,6 +37,11 @@ class SpiderSina {
 			return false;
 		}
 		return $result['result']['data'];
+	}
+
+	public function getTradeByUid($uid)
+	{
+		
 	}
 
 
