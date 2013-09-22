@@ -13,7 +13,9 @@ class WechatController extends Controller
 		Yii::log(var_export($_REQUEST, 1), 'info');
 		// check token
 		$wechatObj = new WechatCom;
-		$wechatObj->valid();
+		if (!$wechatObj->valid(true)){
+			return '';
+		}
 		$wechatObj->positiveInit();  //主动响应组件初始化
 		$wechatObj->setAutoSendOpenidSwitch(TRUE);  //设置自动附带发送Openid
 		$wechatObj->setPassiveAscSwitch(TRUE, TRUE);  //设置打开被动关联组件，并获取用户详细信息
