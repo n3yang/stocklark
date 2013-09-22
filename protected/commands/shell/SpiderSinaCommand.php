@@ -21,7 +21,10 @@ class SpiderSinaCommand extends CConsoleCommand {
 				'params'	=> array(':source'=>'sina'),
 				'order'		=> 'time_deal DESC'
 			);
-			$oTrade = TradeAr::model()->find($criteria);
+			$rs = TradeAr::model()->find($criteria);
+			if (!$rs){
+				$oTrade = new TradeAr;
+			}
 			$lastDealTime = strtotime($oTrade->time_deal);
 			foreach ($trades['data'] as $trade) {
 				if (strtotime($trade['DealTime']) > $lastDealTime) {
@@ -75,7 +78,10 @@ class SpiderSinaCommand extends CConsoleCommand {
 						'condition'	=> 'source_uid=:source_uid AND source=:source',
 						'params'	=> array(':source_uid'=>$player['sid'], ':source'=>'sina'),
 					);
-					$oPlayer = PlayerAr::model()->find($criteria);
+					$rs = PlayerAr::model()->find($criteria);
+					if (!$rs) {
+						$oPlayer = new PlayerAr;
+					}
 					$oPlayer->source_uid = $player['sid'];
 					$oPlayer->name = $player['user_info']['xingming'];
 					$oPlayer->st = $player['user_info']['qs_name'];
