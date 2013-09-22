@@ -29,9 +29,7 @@ class WechatCommand extends CConsoleCommand {
 	public function actionKeepAlive()
 	{
 		$wechatObj = new WechatCom();
-		$wechatObj->positiveInit();
-
-		return $wechatObj->keeplive();
+		return $wechatObj->positiveInit()->keeplive();
 	}
 
 	/**
