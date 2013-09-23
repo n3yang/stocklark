@@ -10,8 +10,8 @@ class WechatController extends Controller
 	public function actionIndex()
 	{
 		// record the request
-		Yii::log(var_export($_REQUEST, 1), 'info');
-		Yii::log(file_get_contents("php://input"), 'info');
+		// Yii::log(var_export($_REQUEST, 1), 'info');
+		// Yii::log(file_get_contents("php://input"), 'info');
 		// check token
 		$wechatObj = new WechatCom;
 		if (!$wechatObj->valid(true)){

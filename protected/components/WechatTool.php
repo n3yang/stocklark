@@ -71,7 +71,8 @@ class WechatTool {
 		if (!$rs){
 			return false;
 		} else {
-			return $this->convert($rs->getAttributes());
+			return true;
+			// return $this->convert($rs->getAttributes());
 		}
 	}
 
