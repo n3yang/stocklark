@@ -39,6 +39,11 @@ class SpiderSina {
 		return $result['result']['data'];
 	}
 
+	/**
+	 * get trade log by sina uid
+	 * @param  string $uid sina uid
+	 * @return array  
+	 */
 	public function getTradeByUid($uid)
 	{
 		

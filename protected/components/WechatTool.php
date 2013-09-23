@@ -142,6 +142,9 @@ class WechatTool {
 			'params'	=> array(':open_id'=>$openId)
 		);
 		$ua = UserAr::model()->find($condition);
+		if (!$ua) {
+			$ua = new UserAr;
+		}
 		$ua->wechat_open_id = $openId;
 		$ua->wechat_followed = 1;
 		return $ua->save();

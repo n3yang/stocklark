@@ -11,10 +11,11 @@ class WechatController extends Controller
 	{
 		// record the request
 		Yii::log(var_export($_REQUEST, 1), 'info');
+		Yii::log(file_get_contents("php://input"), 'info');
 		// check token
 		$wechatObj = new WechatCom;
 		if (!$wechatObj->valid(true)){
-			return '';
+			return ;
 		}
 		$wechatObj->positiveInit();  //主动响应组件初始化
 		$wechatObj->setAutoSendOpenidSwitch(TRUE);  //设置自动附带发送Openid
@@ -48,7 +49,7 @@ class WechatController extends Controller
 						$wechatObj->text("欢迎您关注股市百灵鸟，我们会用心为您服务。\n目前您可以使用的功能有：\n")->reply();
 						break;
 					case "unsubscribe":
-						// uipdate user information
+						// update user information
 						break;
 				}
 				break;
