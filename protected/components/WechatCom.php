@@ -6,6 +6,7 @@ Class WechatCom extends Wechat
 {
 	
 	protected $_passiveAssociationSwitch = FALSE;
+	protected $_wechatcallbackFuns = NULL;
 
 	/**
 	 * construction
