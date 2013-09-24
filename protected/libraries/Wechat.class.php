@@ -126,7 +126,7 @@ class Wechat {
     /**
      * @var boolean 被动响应关联动作开关
      */
-    private $_passiveAssociationSwitch = false;
+    protected $_passiveAssociationSwitch = false;
     /**
      *
      */
