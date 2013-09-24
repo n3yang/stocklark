@@ -667,7 +667,8 @@ class Wechat {
     /**
      * @name 执行关联动作
      */
-    private function doAssociationAction()
+    // private function doAssociationAction()
+    protected function doAssociationAction()
     {
         //var_dump($this->_passiveAssociationSwitch && Wechat::MSGTYPE_EVENT!=$this->getRevType() &&    is_object($this->_wechatcallbackFuns) && method_exists($this->_wechatcallbackFuns, "getAscStatusByOpenid") && method_exists($this->_wechatcallbackFuns, "setAssociation") && !$this->_wechatcallbackFuns->getAscStatusByOpenid($this->getRevFrom()));
         if ($this->_passiveAssociationSwitch && Wechat::MSGTYPE_EVENT!=$this->getRevType() &&   is_object($this->_wechatcallbackFuns) && method_exists($this->_wechatcallbackFuns, "getAscStatusByOpenid") && method_exists($this->_wechatcallbackFuns, "setAssociation") && !$this->_wechatcallbackFuns->getAscStatusByOpenid($this->getRevFrom()))

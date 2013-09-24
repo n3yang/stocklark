@@ -27,7 +27,7 @@ Class WechatCom extends Wechat
 	 * 
 	 * @return object $this
 	 */
-	private function doAssociationAction()
+	protected function doAssociationAction()
 	{
 		if ($this->_passiveAssociationSwitch 
 			&& Wechat::MSGTYPE_EVENT!=$this->getRevType() 
