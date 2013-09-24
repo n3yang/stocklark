@@ -71,13 +71,13 @@ class WechatTool {
 		if (!$rs){
 			return false;
 		} else {
-			return true;
-			// return $this->convert($rs->getAttributes());
+			// return true;
+			return $this->convert($rs->getAttributes());
 		}
 	}
 
 	/**
-	 * @name 判断指定fakeid是否关联
+	 * @name 判断指定fakeid是否关联 (NO USED)
 	 * @param string $fakeId 指定fakeId
 	 * @return boolean 返回逻辑判断结果
 	 * @see WechatAscToolInter::getAscStatusByFakeid()
