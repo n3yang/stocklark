@@ -123,6 +123,7 @@ class WechatTool {
 			$ua->wechat_fake_id = $fakeId;
 			$ua->name = $detailInfo['NickName'];
 			$ua->gender = $detailInfo['Sex'];
+			$ua->time_update = new CDbExpression('NOW()');
 			return $ua->save();
 		}
 	}

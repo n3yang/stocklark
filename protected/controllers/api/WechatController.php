@@ -30,7 +30,7 @@ class WechatController extends Controller
 				}
 				/***********************************************************************************/
 				elseif (strstr($wechatObj->getRevContent(),"3")) {
-					$wechatObj->text("是你英明的老大啊。\n\n你快点叫老大吧。")->reply();
+					$wechatObj->text("老大你好啊，您辛苦啦！")->reply();
 				}
 				/***********************************************************************************/
 				elseif (preg_match('/^[\s]*?帮助[\s]*?$/', $wechatObj->getRevContent())||preg_match('/^[\s]*?help[\s]*?$/', $wechatObj->getRevContent())) {
@@ -49,7 +49,7 @@ class WechatController extends Controller
 						$wechatObj->text("欢迎您关注股市百灵鸟，我们会用心为您服务。\n目前您可以使用的功能有：\n")->reply();
 						break;
 					case "unsubscribe":
-						// update user information
+						// update user information in wechattool->followCancelAction
 						break;
 				}
 				break;
