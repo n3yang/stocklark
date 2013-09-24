@@ -88,7 +88,7 @@ class Wechat {
      * @var array
      * @example array('token'=>'微信接口密钥','account'=>'微信公共平台账号','password'=>'微信公共平台密码','webtoken'=>"微信公共平台网页url的token");
      */
-    private $wechatOptions=array('token'=>'','account'=>'','password'=>'','session'=>"default");   //
+    protected $wechatOptions=array('token'=>'','account'=>'','password'=>'','session'=>"default");   //
     public $webtoken = '';
     public $debug =  false;  //调试开关
     public $protocol = "https";  //使用协议类型 http or  https
@@ -108,32 +108,32 @@ class Wechat {
 
     public static $POSITIVE_MSGTYPE = array('text'=>1, 'image'=>2, 'voice'=>3, 'video'=>4, 'news'=>10,'goods'=>11, 'card'=>42);  //主动消息类型代码数组
     /* 私有参数 */
-    private $_msg;
-    private $_funcflag = false;
+    protected $_msg;
+    protected $_funcflag = false;
     public $_receive;
-    private $_logcallback;
-    private $_getRevRunOnce = 0;
-    private $_cookies;
-    private $_wechatcallbackFuns = null;
-    private $_curlHttpObject = null;
-    private $_referer = "https://mp.weixin.qq.com/";
+    protected $_logcallback;
+    protected $_getRevRunOnce = 0;
+    protected $_cookies;
+    protected $_wechatcallbackFuns = null;
+    protected $_curlHttpObject = null;
+    protected $_referer = "https://mp.weixin.qq.com/";
     /**
      * @var boolean 自动附带发送openid开关
      */
-    private $_autosendopenid = false;
+    protected $_autosendopenid = false;
 
 
     /**
      * @var boolean 被动响应关联动作开关
      */
-    private $_passiveAssociationSwitch = false;
+    protected $_passiveAssociationSwitch = false;
     /**
      *
      */
     /**
      * @var boolean 被动响应关联动作开关
      */
-    private $_passiveAscGetDetailSwitch = false;
+    protected $_passiveAscGetDetailSwitch = false;
     /**
      * 初始化工作
      * @param array $option  array('token'=>'微信接口密钥','account'=>'微信公共平台账号','password'=>'微信公共平台密码');

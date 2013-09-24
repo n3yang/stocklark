@@ -5,9 +5,6 @@ require_once 'Wechat.class.php';
 Class WechatCom extends Wechat
 {
 	
-	private $_passiveAssociationSwitch = FALSE;
-	private $_wechatcallbackFuns = NULL;
-
 	/**
 	 * construction
 	 */
