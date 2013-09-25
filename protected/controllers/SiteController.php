@@ -30,8 +30,6 @@ class SiteController extends Controller
 		// renders the view file 'protected/views/site/index.php'
 		// using the default layout 'protected/views/layouts/main.php'
 		$this->render('index');
-		$wt = new WechatTool;
-		var_dump($wt->setAssociation(123,123,array('NickName'=>'hi')));
 	}
 
 	/**
@@ -51,22 +49,22 @@ class SiteController extends Controller
 	/**
 	 * Displays the contact page
 	 */
-	public function actionContact()
-	{
-		$model=new ContactForm;
-		if(isset($_POST['ContactForm']))
-		{
-			$model->attributes=$_POST['ContactForm'];
-			if($model->validate())
-			{
-				$headers="From: {$model->email}\r\nReply-To: {$model->email}";
-				mail(Yii::app()->params['adminEmail'],$model->subject,$model->body,$headers);
-				Yii::app()->user->setFlash('contact','Thank you for contacting us. We will respond to you as soon as possible.');
-				$this->refresh();
-			}
-		}
-		$this->render('contact',array('model'=>$model));
-	}
+	// public function actionContact()
+	// {
+	// 	$model=new ContactForm;
+	// 	if(isset($_POST['ContactForm']))
+	// 	{
+	// 		$model->attributes=$_POST['ContactForm'];
+	// 		if($model->validate())
+	// 		{
+	// 			$headers="From: {$model->email}\r\nReply-To: {$model->email}";
+	// 			mail(Yii::app()->params['adminEmail'],$model->subject,$model->body,$headers);
+	// 			Yii::app()->user->setFlash('contact','Thank you for contacting us. We will respond to you as soon as possible.');
+	// 			$this->refresh();
+	// 		}
+	// 	}
+	// 	$this->render('contact',array('model'=>$model));
+	// }
 
 	/**
 	 * Displays the login page
