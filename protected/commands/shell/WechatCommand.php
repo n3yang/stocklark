@@ -43,14 +43,23 @@ class WechatCommand extends CConsoleCommand {
 			'condition' => 'status=:tosend',
 			'params'	=> array(':tosend'=>MessageQueueAr::STATUS_TO_SEND),
 		);
-		$mqa = MessageQueueAr::model()->findALL($criteria);
-		if (!$mqa){
+		$queue = MessageQueueAr::model()->findALL($criteria);
+		if (!$queue){
 			return 0;
 		}
-	var_dump($mqa);	
-//		foreach ($mqa as $mk=>$mv) {
-//			
-//		}
+		$wechatObj = new WechatCom();
+		$wechatObj->positiveInit();
+		foreach ($queue as $message) {
+			if ($message->user->wechat_fake_id) {
+				// TODO: log result
+				$singleresult = $wechatObj->send($message->user->wechat_fake_id, $message->content);
+				if ($singleresult){
+					$message->status = MessageQueueAr::STATUS_SUCESS;
+					$message->save();
+				}
+			}
+		}
+		return 1;
 	}
 
 	/**
