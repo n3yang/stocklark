@@ -137,10 +137,10 @@ class SpiderSinaCommand extends CConsoleCommand {
 				if ($oSubscribe){
 					// 
 					$sAction = $oTrade->sell_buy==TradeAr::ACTION_BUY ? '买入' : '卖出';
-					$content = $oTrade->name
+					$content = '【新浪投顾大赛】'.$oTrade->name
 						.date(' 于m月d日 H:i', strtotime($oTrade->time_deal))
 						.' 以'.$oTrade->price.'元 '
-						.$sAction.$oTrade->amount.'股 '.$oTrade->stock_name.'('.$oTrade->stock_code.')';
+						.$sAction.$oTrade->amount.'股 '.$oTrade->stock_name.'（'.$oTrade->stock_code.'）';
 					$user_id = $oSubscribe->user_id;
 					// add to message queue
 					$oMessageQueue = new MessageQueueAr();
@@ -156,6 +156,14 @@ class SpiderSinaCommand extends CConsoleCommand {
 		}
 
 
+	}
+	
+	
+	public function actionUpdateSubscribe($param) {
+		if ($this->actionUpdateTrade()) {
+			$this->actionParseSubscribe();
+		}
+		return 1;
 	}
 
 
