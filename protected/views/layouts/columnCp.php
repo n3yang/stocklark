@@ -6,7 +6,17 @@
 		$this->beginWidget('zii.widgets.CPortlet', array(
 			'title'=>'Modles',
 		));
-		echo 1231231;
+		$this->widget('zii.widgets.CMenu', array(
+	         'items'=>array(
+	            array('label'=>'player', 'url'=>array('cp/player')),
+	            array('label'=>'subscribe', 'url'=>array('cp/subscribe')),
+	            array('label'=>'trade', 'url'=>array('cp/trade')),
+	            array('label'=>'user', 'url'=>array('cp/user')),
+	            array('label'=>'message_queue', 'url'=>array('cp/message_queue')),
+	            // array('label'=>'', 'url'=>array('')),
+	        ),
+			'htmlOptions'=>array('class'=>'operations'),
+		));
 		$this->endWidget();
 	?>
 
