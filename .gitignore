@@ -166,7 +166,7 @@ pip-log.txt
 .zfproject.xml
 
 # program ignore
-assets
+assets/*
 protected/config/*
 protected/runtime/*
 protected/data/*
