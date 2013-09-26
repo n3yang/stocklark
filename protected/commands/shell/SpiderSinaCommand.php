@@ -6,10 +6,11 @@ class SpiderSinaCommand extends CConsoleCommand {
 	 * get the trading log: catch and save
 	 * @return bool true/false
 	 */
-	public function actionUpdateTrade()
+	public function actionUpdateTrade($date='')
 	{
+		$date = empty($date) ? date('Y-m-d') : $date;
 		$spider = new SpiderSina;
-		$trades = $spider->getTrade('2013-09-09');
+		$trades = $spider->getTrade($date);
 		if (!$trades) {
 			Yii::log('fault to get sina players', 'error');
 			echo 'fault';
@@ -21,8 +22,8 @@ class SpiderSinaCommand extends CConsoleCommand {
 				'params'	=> array(':source'=>'sina'),
 				'order'		=> 'time_deal DESC'
 			);
-			$rs = TradeAr::model()->find($criteria);
-			if (!$rs){
+			$oTrade = TradeAr::model()->find($criteria);
+			if (!$oTrade){
 				$oTrade = new TradeAr;
 			}
 			$lastDealTime = strtotime($oTrade->time_deal);
@@ -63,7 +64,7 @@ class SpiderSinaCommand extends CConsoleCommand {
 	 * @param  integer $num 数量
 	 * @return bool    	true/false
 	 */
-	public function actionUpdatePlayer($num=10)
+	public function actionUpdatePlayer($num=10000)
 	{
 		$spider = new SpiderSina();
 		$players = $spider->getPlayer($num);
@@ -78,8 +79,8 @@ class SpiderSinaCommand extends CConsoleCommand {
 						'condition'	=> 'source_uid=:source_uid AND source=:source',
 						'params'	=> array(':source_uid'=>$player['sid'], ':source'=>'sina'),
 					);
-					$rs = PlayerAr::model()->find($criteria);
-					if (!$rs) {
+					$oPlayer = PlayerAr::model()->find($criteria);
+					if (!$oPlayer) {
 						$oPlayer = new PlayerAr;
 					}
 					$oPlayer->source_uid = $player['sid'];
@@ -149,8 +150,8 @@ class SpiderSinaCommand extends CConsoleCommand {
 				}
 			}
 			// mark trade to done.
-			// $oTrade->status = 1;
-			// $oTrade->save();
+			$oTrade->status = 1;
+			$oTrade->save();
 		}
 
 
