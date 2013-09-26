@@ -96,7 +96,7 @@ class SpiderSinaCommand extends CConsoleCommand {
 					$oPlayer->profit_ratio_total = $player['total_profit_ratio'];
 					$rs = $oPlayer->save();
 					if (!$rs) {
-						Yii::log('fault to insert:'.$oPlayer->getErrors(), 'error');
+						Yii::log('fault to insert:'.var_export($oPlayer->getErrors(), 1), 'error');
 					}
 				}
 			} // end foreach
