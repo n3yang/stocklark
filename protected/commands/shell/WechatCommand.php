@@ -40,7 +40,7 @@ class WechatCommand extends CConsoleCommand {
 	public function actionSend()
 	{
 		$criteria = array(
-			'condition' => 'status=:tosend',
+			'condition' => 't.status=:tosend',
 			'params'	=> array(':tosend'=>MessageQueueAr::STATUS_TO_SEND),
 		);
 		$queue = MessageQueueAr::model()->with('user')->findALL($criteria);

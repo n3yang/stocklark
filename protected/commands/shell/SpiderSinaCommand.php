@@ -27,6 +27,7 @@ class SpiderSinaCommand extends CConsoleCommand {
 				$oTrade = new TradeAr;
 			}
 			$lastDealTime = strtotime($oTrade->time_deal);
+			$ds = array();
 			foreach ($trades['data'] as $trade) {
 				if (strtotime($trade['DealTime']) > $lastDealTime) {
 					$ds[] = $trade;
