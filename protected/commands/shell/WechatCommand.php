@@ -40,8 +40,17 @@ class WechatCommand extends CConsoleCommand {
 	public function actionSend()
 	{
 		$criteria = array(
-			'condition' => 'status=:need',
+			'condition' => 'status=:tosend',
+			'params'	=> array(':tosend'=>MessageQueueAr::STATUS_TO_SEND),
 		);
+		$mqa = MessageQueueAr::model()->findALL($criteria);
+		if (!$mqa){
+			return 0;
+		}
+	var_dump($mqa);	
+//		foreach ($mqa as $mk=>$mv) {
+//			
+//		}
 	}
 
 	/**
@@ -52,8 +61,8 @@ class WechatCommand extends CConsoleCommand {
 	 */
 	public function actionSendTest($fakeId='', $message='')
 	{
-		$fakeId = "2345861760";
-		$message = "hello";
+		$fakeId = empty($fakeId) ? "2345861760" : $fakeId;
+		$message = empty($message) ? 'hello' : $message;
 
 		if (!$fakeId || !$message) {
 			echo 'required params!';

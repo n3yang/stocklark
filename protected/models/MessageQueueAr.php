@@ -13,6 +13,10 @@
  */
 class MessageQueueAr extends CActiveRecord
 {
+	
+	const STATUS_TO_SEND = 0;
+	const STATUS_SUCESS = 1;
+	const STATUS_FAULT = -1;
 	/**
 	 * Returns the static model of the specified AR class.
 	 * @param string $className active record class name.
@@ -64,6 +68,7 @@ class MessageQueueAr extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
+			'user'	=> array(self::BELONGS_TO, 'UserAr', 'id') 
 		);
 	}
 
