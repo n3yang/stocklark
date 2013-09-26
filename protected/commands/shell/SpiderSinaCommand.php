@@ -159,7 +159,7 @@ class SpiderSinaCommand extends CConsoleCommand {
 	}
 	
 	
-	public function actionUpdateSubscribe($param) {
+	public function actionUpdateSubscribe() {
 		if ($this->actionUpdateTrade()) {
 			$this->actionParseSubscribe();
 		}
