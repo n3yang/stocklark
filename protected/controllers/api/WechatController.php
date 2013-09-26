@@ -25,16 +25,20 @@ class WechatController extends Controller
 
 		switch($revtype) {
 			case Wechat::MSGTYPE_TEXT:
-				if(strstr($wechatObj->getRevContent(),"d")) {
+				$content =& $wechatObj->getRevContent();
+				if(strstr($content,"d")) {
 					$wechatObj->text("d-test")->reply();
 				}
 				/***********************************************************************************/
-				elseif (strstr($wechatObj->getRevContent(),"3")) {
+				elseif (strstr($content,"3")) {
 					$wechatObj->text("老大你好啊，您辛苦啦！")->reply();
 				}
 				/***********************************************************************************/
-				elseif (preg_match('/^[\s]*?帮助[\s]*?$/', $wechatObj->getRevContent())||preg_match('/^[\s]*?help[\s]*?$/', $wechatObj->getRevContent())) {
-					$wechatObj->text("有效的指令\n我的订阅\n推荐订阅\n取消订阅\n")->reply();
+				elseif (preg_match('/^[\s]*?帮助[\s]*?$/', $content)
+					||preg_match('/^[\s]*?help[\s]*?$/', $content)
+					||strstr($content, '1')
+					) {
+					$wechatObj->text("你可以回复下述指令以获得更多有效的指令\n我的订阅（或者数字“2”）\n推荐订阅（或者数字“3”）\n")->reply();
 				}
 				/***********************************************************************************/
 				else {
@@ -46,7 +50,7 @@ class WechatController extends Controller
 				$revEvent = $wechatObj->getRevEvent();
 				switch ($revEvent['event']) {
 					case "subscribe":
-						$wechatObj->text("欢迎您关注股市百灵鸟，我们会用心为您服务。\n目前您可以使用的功能有：\n")->reply();
+						$wechatObj->text("欢迎您关注股市百灵鸟，我们会用心为您服务。\n您可以回复“帮助”或者数字“1”，来获取更多信息。\n")->reply();
 						break;
 					case "unsubscribe":
 						// update user information in wechattool->followCancelAction
@@ -54,7 +58,7 @@ class WechatController extends Controller
 				}
 				break;
 			default:
-				$wechatObj->text("help info")->reply();
+				$wechatObj->text("please type 'help' or 'h' to get more information.")->reply();
 		}
 
 	}
