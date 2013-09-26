@@ -39,6 +39,8 @@ class WechatCommand extends CConsoleCommand {
 	 */
 	public function actionSend()
 	{
+		// waiting message queue
+		sleep(10);
 		$criteria = array(
 			'condition' => 't.status=:tosend',
 			'params'	=> array(':tosend'=>MessageQueueAr::STATUS_TO_SEND),
@@ -52,11 +54,14 @@ class WechatCommand extends CConsoleCommand {
 		foreach ($queue as $message) {
 			if ($message->user->wechat_fake_id) {
 				// TODO: log result
+				// 返回发送结果：成功返回:1,登录问题返回:-1;需要验证码:-6;其他
 				$singleresult = $wechatObj->send($message->user->wechat_fake_id, $message->content);
-				if ($singleresult){
-					$message->status = MessageQueueAr::STATUS_SUCESS;
-					$message->save();
+				if ($singleresult==1){
+					$message->status = MessageQueueAr::STATUS_SUCESS;	
+				} else {
+					$message->status = MessageQueueAr::STATUS_FAULT;
 				}
+				$message->save();
 			}
 		}
 		return 1;
