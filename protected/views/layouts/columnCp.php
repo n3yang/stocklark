@@ -12,8 +12,8 @@
 	            array('label'=>'subscribe', 'url'=>array('cp/subscribe')),
 	            array('label'=>'trade', 'url'=>array('cp/trade')),
 	            array('label'=>'user', 'url'=>array('cp/user')),
-	            array('label'=>'message_queue', 'url'=>array('cp/message_queue')),
-	            // array('label'=>'', 'url'=>array('')),
+	            array('label'=>'message queue', 'url'=>array('cp/messageQueue')),
+	            array('label'=>'subscribe log', 'url'=>array('cp/subscribeLog')),
 	        ),
 			'htmlOptions'=>array('class'=>'operations'),
 		));

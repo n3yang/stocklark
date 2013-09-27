@@ -121,7 +121,7 @@ class UserController extends Controller
 	{
 		$dataProvider=new CActiveDataProvider('UserAr', array(
 			'criteria'	=> array(
-				'order'	=> 'time_create DESC',
+				'order'	=> 't.time_create DESC',
 			)
 		));
 		$this->render('index',array(

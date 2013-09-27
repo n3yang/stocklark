@@ -8,6 +8,10 @@
 	<?php echo CHtml::encode($data->user_id); ?>
 	<br />
 
+	<b><?php echo CHtml::encode($data->getAttributeLabel('user.name')); ?>:</b>
+	<?php echo CHtml::encode($data->user->name); ?>
+	<br />
+
 	<b><?php echo CHtml::encode($data->getAttributeLabel('type')); ?>:</b>
 	<?php echo CHtml::encode($data->type); ?>
 	<br />

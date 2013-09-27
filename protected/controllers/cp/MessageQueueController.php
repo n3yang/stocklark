@@ -121,7 +121,7 @@ class MessageQueueController extends Controller
 	{
 		$dataProvider=new CActiveDataProvider('MessageQueueAr', array(
 			'criteria'	=> array(
-				'order'	=> 'time_create DESC',
+				'order'	=> 't.time_create DESC',
 				'with'	=> array('user'),
 			)
 		));

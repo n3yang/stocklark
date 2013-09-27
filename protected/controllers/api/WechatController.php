@@ -38,7 +38,7 @@ class WechatController extends Controller
 					||preg_match('/^[\s]*?help[\s]*?$/', $content)
 					||strstr($content, '?')||strstr($content, '？')
 					) {
-					$wechatObj->text("您可以回复下述指令以获得更多有效的指令\n我的订阅（或者数字“1”）\n推荐订阅（或者数字“2”）\n")->reply();
+					$wechatObj->text("您可以回复下述指令以获得更多有效的指令\n我的订阅（或数字“1”）\n推荐订阅（或数字“2”）\n")->reply();
 				}
 				/***********************************************************************************/
 				else {

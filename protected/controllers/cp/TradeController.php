@@ -121,7 +121,7 @@ class TradeController extends Controller
 	{
 		$dataProvider=new CActiveDataProvider('TradeAr', array(
 			'criteria'	=> array(
-				'order'	=> 'time_create DESC',
+				'order'	=> 't.time_create DESC',
 				'with'	=> array('user'),
 			)
 		));

@@ -121,8 +121,7 @@ class SubscribeController extends Controller
 	{
 		$dataProvider=new CActiveDataProvider('SubscribeAr', array(
 			'criteria'	=> array(
-				'order'	=> 'time_create DESC',
-				'with'	=> array('user'),
+				'order'	=> 't.time_create DESC',
 			)
 		));
 		$this->render('index',array(
