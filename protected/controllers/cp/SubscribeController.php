@@ -119,7 +119,12 @@ class SubscribeController extends Controller
 	 */
 	public function actionIndex()
 	{
-		$dataProvider=new CActiveDataProvider('SubscribeAr');
+		$dataProvider=new CActiveDataProvider('SubscribeAr', array(
+			'criteria'	=> array(
+				'order'	=> 'time_create DESC',
+				'with'	=> array('user'),
+			)
+		));
 		$this->render('index',array(
 			'dataProvider'=>$dataProvider,
 		));

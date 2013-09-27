@@ -119,7 +119,12 @@ class MessageQueueController extends Controller
 	 */
 	public function actionIndex()
 	{
-		$dataProvider=new CActiveDataProvider('MessageQueueAr');
+		$dataProvider=new CActiveDataProvider('MessageQueueAr', array(
+			'criteria'	=> array(
+				'order'	=> 'time_create DESC',
+				'with'	=> array('user'),
+			)
+		));
 		$this->render('index',array(
 			'dataProvider'=>$dataProvider,
 		));
