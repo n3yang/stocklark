@@ -8,11 +8,20 @@ class SpiderSinaCommand extends CConsoleCommand {
 	 */
 	public function actionUpdateTrade($date='')
 	{
-		$date = empty($date) ? date('Y-m-d') : $date;
+		$playerTop20 = array('3546860260','1026334481','3094491385','3441583060','3536839744','1721520531','1891026372','1829196092','2476909985','2119849815','1877585645','1401915280','2906323025','2314717320','1794744725','3093248681','1149275663','2092007254','2432816834','1898457913');
+		// $playerTop20 = array('3546860260','1026334481');
 		$spider = new SpiderSina;
-		$trades = $spider->getTrade($date);
+		$trades['data'] = array();
+		foreach ($playerTop20 as $key => $value) {
+			$result = $spider->getTradeByUid($value, 3);
+			$trades['data'] = array_merge($trades['data'],$result['data']);
+		}
+		// var_dump($trades);
+		// $date = empty($date) ? date('Y-m-d') : $date;
+		// $spider = new SpiderSina;
+		// $trades = $spider->getTrade($date);
 		if (!$trades) {
-			Yii::log('fault to get sina players', 'error');
+			Yii::log('fault to get sina trade', 'error');
 			echo 'fault';
 			return false;
 		} else {
@@ -22,32 +31,43 @@ class SpiderSinaCommand extends CConsoleCommand {
 				'params'	=> array(':source'=>'sina'),
 				'order'		=> 'time_deal DESC'
 			);
-			$oTrade = TradeAr::model()->find($criteria);
-			if (!$oTrade){
-				$oTrade = new TradeAr;
-			}
-			$lastDealTime = strtotime($oTrade->time_deal);
+			$lastDealTime = TradeAr::model()->find($criteria)->getAttribute('time_deal');
 			$ds = array();
 			foreach ($trades['data'] as $trade) {
-				if (strtotime($trade['DealTime']) > $lastDealTime) {
+				if (strtotime($trade['DealTime']) > strtotime($lastDealTime)) {
 					$ds[] = $trade;
+					$dsDealTime[] = $trade['DealTime'];
 				}
 			}
-			// order by deal time
-			for ($i=count($ds)-1; $i >=0; --$i) { 
+			// sort by deal time ASC
+			array_multisort($dsDealTime, SORT_ASC, $ds);
+			//
+			foreach ($ds as $d) {
 				$oTrade = new TradeAr;
 				$oTrade->source = 'sina';
-  				$oTrade->source_uid = $ds[$i]['sid'];
-				$oTrade->price = $ds[$i]['price']; 
-				$oTrade->amount = $ds[$i]['count'];
-				$oTrade->stock_code = $ds[$i]['StockCode'];
-				$oTrade->stock_name = $ds[$i]['StockName'];
-				$oTrade->sell_buy = $ds[$i]['SellBuy']; // 0买；1卖
-				$oTrade->time_deal = $ds[$i]['DealTime'];
-				$oTrade->remark = $ds[$i]['remark']; // 
-				$oTrade->name = $ds[$i]['name']; //
-				$oTrade->st = $ds[$i]['qs_name']; // 
-				$oTrade->sd = $ds[$i]['yingyebu']; //
+  				$oTrade->source_uid = $d['sid'];
+				$oTrade->price = empty($d['price']) ? $d['DealPrice'] : $d['price'];
+				$oTrade->amount = empty($d['count']) ? $d['DealAmount'] : $d['count'];
+				$oTrade->stock_code = $d['StockCode'];
+				$oTrade->stock_name = $d['StockName'];
+				$oTrade->sell_buy = $d['SellBuy']; // 0买；1卖
+				$oTrade->time_deal = $d['DealTime'];
+				$oTrade->remark = $d['remark']; // 
+				if (empty($d['name'])) {
+					$criteria = array(
+						'condition'	=> 'source=:source AND source_uid=:source_uid',
+						'params'	=> array(':source'=>'sina', ':source_uid'=>$d['sid']),
+					);
+					$oPlayer = PlayerAr::model()->find($criteria);
+					$oTrade->name = $oPlayer->name;
+					$oTrade->st = $oPlayer->st; // 
+					$oTrade->sd = $oPlayer->sd; //
+
+				} else {
+					$oTrade->name = $d['name']; //
+					$oTrade->st = $d['qs_name']; // 
+					$oTrade->sd = $d['yingyebu']; //
+				}
 				$rs = $oTrade->save();
 				if (!$rs) {
 					Yii::log('fault to db insert:'.var_export($oTrade->getErrors(),1), 'error');
