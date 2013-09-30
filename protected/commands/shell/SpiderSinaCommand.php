@@ -39,40 +39,42 @@ class SpiderSinaCommand extends CConsoleCommand {
 					$dsDealTime[] = $trade['DealTime'];
 				}
 			}
-			// sort by deal time ASC
-			array_multisort($dsDealTime, SORT_ASC, $ds);
-			//
-			foreach ($ds as $d) {
-				$oTrade = new TradeAr;
-				$oTrade->source = 'sina';
-  				$oTrade->source_uid = $d['sid'];
-				$oTrade->price = empty($d['price']) ? $d['DealPrice'] : $d['price'];
-				$oTrade->amount = empty($d['count']) ? $d['DealAmount'] : $d['count'];
-				$oTrade->stock_code = $d['StockCode'];
-				$oTrade->stock_name = $d['StockName'];
-				$oTrade->sell_buy = $d['SellBuy']; // 0买；1卖
-				$oTrade->time_deal = $d['DealTime'];
-				$oTrade->remark = $d['remark']; // 
-				if (empty($d['name'])) {
-					$criteria = array(
-						'condition'	=> 'source=:source AND source_uid=:source_uid',
-						'params'	=> array(':source'=>'sina', ':source_uid'=>$d['sid']),
-					);
-					$oPlayer = PlayerAr::model()->find($criteria);
-					$oTrade->name = $oPlayer->name;
-					$oTrade->st = $oPlayer->st; // 
-					$oTrade->sd = $oPlayer->sd; //
+			// update database
+			if (!empty($ds)){
+				// sort by deal time ASC
+				array_multisort($dsDealTime, SORT_ASC, $ds);
+				foreach ($ds as $d) {
+					$oTrade = new TradeAr;
+					$oTrade->source = 'sina';
+	  				$oTrade->source_uid = $d['sid'];
+					$oTrade->price = empty($d['price']) ? $d['DealPrice'] : $d['price'];
+					$oTrade->amount = empty($d['count']) ? $d['DealAmount'] : $d['count'];
+					$oTrade->stock_code = $d['StockCode'];
+					$oTrade->stock_name = $d['StockName'];
+					$oTrade->sell_buy = $d['SellBuy']; // 0买；1卖
+					$oTrade->time_deal = $d['DealTime'];
+					$oTrade->remark = $d['remark']; // 
+					if (empty($d['name'])) {
+						$criteria = array(
+							'condition'	=> 'source=:source AND source_uid=:source_uid',
+							'params'	=> array(':source'=>'sina', ':source_uid'=>$d['sid']),
+						);
+						$oPlayer = PlayerAr::model()->find($criteria);
+						$oTrade->name = $oPlayer->name;
+						$oTrade->st = $oPlayer->st; // 
+						$oTrade->sd = $oPlayer->sd; //
 
-				} else {
-					$oTrade->name = $d['name']; //
-					$oTrade->st = $d['qs_name']; // 
-					$oTrade->sd = $d['yingyebu']; //
-				}
-				$rs = $oTrade->save();
-				if (!$rs) {
-					Yii::log('fault to db insert:'.var_export($oTrade->getErrors(),1), 'error');
-				}
-			} // end for
+					} else {
+						$oTrade->name = $d['name']; //
+						$oTrade->st = $d['qs_name']; // 
+						$oTrade->sd = $d['yingyebu']; //
+					}
+					$rs = $oTrade->save();
+					if (!$rs) {
+						Yii::log('fault to db insert:'.var_export($oTrade->getErrors(),1), 'error');
+					}
+				} // end foreach
+			}
 			echo 'done!';
 			return true;
 		}
