@@ -8,18 +8,18 @@ class SpiderSinaCommand extends CConsoleCommand {
 	 */
 	public function actionUpdateTrade($date='')
 	{
-		$playerTop20 = array('3546860260','1026334481','3094491385','3441583060','3536839744','1721520531','1891026372','1829196092','2476909985','2119849815','1877585645','1401915280','2906323025','2314717320','1794744725','3093248681','1149275663','2092007254','2432816834','1898457913');
-		// $playerTop20 = array('3546860260','1026334481');
-		$spider = new SpiderSina;
-		$trades['data'] = array();
-		foreach ($playerTop20 as $key => $value) {
-			$result = $spider->getTradeByUid($value, 3);
-			$trades['data'] = array_merge($trades['data'],$result['data']);
-		}
-		// var_dump($trades);
-		// $date = empty($date) ? date('Y-m-d') : $date;
+		// $playerTop20 = array('3546860260','1026334481','3094491385','3441583060','3536839744','1721520531','1891026372','1829196092','2476909985','2119849815','1877585645','1401915280','2906323025','2314717320','1794744725','3093248681','1149275663','2092007254','2432816834','1898457913');
+		// // $playerTop20 = array('3546860260','1026334481');
 		// $spider = new SpiderSina;
-		// $trades = $spider->getTrade($date);
+		// $trades['data'] = array();
+		// foreach ($playerTop20 as $key => $value) {
+		// 	$result = $spider->getTradeByUid($value, 3);
+		// 	$trades['data'] = array_merge($trades['data'],$result['data']);
+		// }
+		// var_dump($trades);
+		$date = empty($date) ? date('Y-m-d') : $date;
+		$spider = new SpiderSina;
+		$trades = $spider->getTrade($date);
 		if (!$trades) {
 			Yii::log('fault to get sina trade', 'error');
 			echo 'fault';
