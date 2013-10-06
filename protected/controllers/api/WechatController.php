@@ -46,7 +46,7 @@ class WechatController extends Controller
 					||preg_match('/^[\s]*?help[\s]*?$/', $content)
 					||strstr($content, '?')||strstr($content, '？')
 					) {
-					$wechatObj->text("您可以回复下述指令以获得更多有效的指令\n我的订阅（或数字“1”）\n推荐订阅（或数字“2”）\n")->reply();
+					$this->replyHelp();
 				}
 				/***********************************************************************************/
 				else {
@@ -72,17 +72,17 @@ class WechatController extends Controller
 	}
 
 
-	public function replyStock($sid)
+	protected function replyStock($sid)
 	{
 		$s = new SpiderSina;
 		$stock = $s->getStock($sid);
 		if (!$stock) {
-			$message = '没有查询到相应的股票信息，请重新输入股票代码，如果问题仍然存在，回复”建议：+内容“反馈给我们，谢谢！';
+			$message = '没有查询到相应的股票信息，请重新输入股票代码，如问题依旧，回复“建议：+内容”反馈给我们，谢谢！';
 		} else {
 			$up = $stock['current']-$stock['yestoday'];
-			$rate = $stock['yestoday']==0 ? 0 : number_format(($up/$stock['yestoday'])*100, 2);
+			$rate = $stock['yestoday']==0 ? '' : '('.number_format(($up/$stock['yestoday'])*100, 2).'%)';
 			$message = $stock['name']."\n"
-				.'上涨: '."$up ($rate%)\n"
+				.'上涨: '."$up $rate\n"
 				.'当前: '.$stock['current']."\n"
 				.'今开: '.$stock['open']."   ".'昨收: '.$stock['yestoday']."\n"
 				.'最高: '.$stock['max']."   ".'最低: '.$stock['min']."\n"
@@ -93,8 +93,17 @@ class WechatController extends Controller
 				.'换手率: '.$stock['exchange']."%\n"
 				.'市净率: '.$stock['pb']."%\n"
 				.'市盈率: '.$stock['ttm']."%\n"
-				.'更新时间: '.date('m月d日 H:i:s', $stock['update']);
+				.'更新时间: '.date('m.d H:i:s', $stock['update']);
 		}
+		$this->oWechat->text($message)->reply();
+	}
+
+	protected function replyHelp()
+	{
+		$message = "您可以回复下述指令以获得更多有效的内容：\n"
+			."我的订阅（或数字“1”）\n"
+			."推荐订阅（或数字“2”）\n"
+			."股票代码（如：600600）";
 		$this->oWechat->text($message)->reply();
 	}
 
