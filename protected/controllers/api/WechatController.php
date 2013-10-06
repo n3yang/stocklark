@@ -32,25 +32,30 @@ class WechatController extends Controller
 
 		switch($revtype) {
 			case Wechat::MSGTYPE_TEXT:
-				$content =& $wechatObj->getRevContent();
-				/*************************************/
+				$content = $wechatObj->getRevContent();
+				/********** 股票代码 **********/
 				if (preg_match('/^[0,2,3,6,9]\d{5}$/', $content)){
 					$this->replyStock($content);
 				}
-				/***********************************************************************************/
+				/********** spicel code **********/
 				elseif (strstr($content,"3")) {
 					$wechatObj->text("老大你好啊，您辛苦啦！")->reply();
 				}
-				/***********************************************************************************/
+				/********** help info **********/
 				elseif (preg_match('/^[\s]*?帮助[\s]*?$/', $content)
 					||preg_match('/^[\s]*?help[\s]*?$/', $content)
 					||strstr($content, '?')||strstr($content, '？')
 					) {
 					$this->replyHelp();
 				}
-				/***********************************************************************************/
+				/********** 模糊查询股票信息 **********/
+				else if (preg_match('/^[a-zA-Z]]{3,4}$/', $content)
+					|| preg_match('/^[\x{4e00}-\x{9fa5}]{3,4}$/u', $content)) {
+					$this->replyStockSmarty();
+				}
+				/********** default help info **********/
 				else {
-					$wechatObj->text("默认回复")->reply();
+					$this->replyHelp();
 				}
 				break;
 			case Wechat::MSGTYPE_EVENT:
@@ -98,12 +103,18 @@ class WechatController extends Controller
 		$this->oWechat->text($message)->reply();
 	}
 
+	protected function replyStockSmarty($str)
+	{
+		$s = new SpiderSina;
+		return $this->replyStock($s->getStockIdSmarty($str));
+	}
+
 	protected function replyHelp()
 	{
-		$message = "您可以回复下述指令以获得更多有效的内容：\n"
+		$message = "您可以回复下述指令以获得更多信息：\n"
 			."我的订阅（或数字“1”）\n"
 			."推荐订阅（或数字“2”）\n"
-			."股票代码（如：600600）";
+			."股票代码（如：”000001“或”payh“或”平安银行“）";
 		$this->oWechat->text($message)->reply();
 	}
 

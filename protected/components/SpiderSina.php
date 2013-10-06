@@ -8,6 +8,7 @@ class SpiderSina {
 	const URI_PLAYER = 'http://stock.finance.sina.com.cn/match/api/openapi.php/TouGuDaSai_Service.getZongHeShouYi';
 	const URI_TRADE_BY_UID = 'http://stock.finance.sina.com.cn/match/api/openapi.php/Order_Service.getTransaction';
 	const URI_STOCK = 'http://qt.gtimg.cn/';
+	const URI_STOCK_SMARTY = 'http://smartbox.gtimg.cn/s3/';
 
 	protected $cid = '';
 	public function __construct()
@@ -104,16 +105,7 @@ class SpiderSina {
 			$stock = 'sz'.$stock;
 		}
 
-		$ch = curl_init();
-		curl_setopt_array($ch, array(
-			CURLOPT_FOLLOWLOCATION	=> 1,
-			CURLOPT_TIMEOUT			=> 10,
-			CURLOPT_RETURNTRANSFER	=> 1,
-			CURLOPT_URL				=> self::URI_STOCK.'?q='.$stock,
-			CURLOPT_USERAGENT		=> 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_5) AppleWebKit/536.30.1 (KHTML, like Gecko) Version/6.0.5 Safari/536.30.1',
-			));
-		$res = curl_exec($ch);
-		curl_close($ch);
+		$res = $this->getHttp(self::URI_STOCK.'?q='.$stock);
 		$res = iconv('GBK', 'UTF-8', $res);
 		// parse result
 		$ds = explode('~', $res);
@@ -142,8 +134,35 @@ class SpiderSina {
 		return $stock;
 	}
 
+	public function getStockIdSmarty($str)
+	{
+		if (!$str) {
+			return false;
+		}
+		$res = $this->getHttp(self::URI_STOCK_SMARTY.'?q='.urlencode($str).'&t=gp');
+		$ds = explode('~', $res);
+		return empty($ds[1]) ? '' : $ds[1];
+	}
+
+	private function getHttp($url){
+		$ch = curl_init();
+		curl_setopt_array($ch, array(
+			CURLOPT_FOLLOWLOCATION	=> 1,
+			CURLOPT_TIMEOUT			=> 10,
+			CURLOPT_RETURNTRANSFER	=> 1,
+			CURLOPT_URL				=> $url,
+			CURLOPT_USERAGENT		=> 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_5) Safari/536.30.1',
+			));
+		$res = curl_exec($ch);
+		curl_close($ch);
+		return $res;
+	}
+
 	private function log($text, $method='', $level='error')
 	{
 		Yii::log(__CLASS__.':'.$method.':'.$text, $level);
 	}
 }
+
+
+new SpiderSina;
