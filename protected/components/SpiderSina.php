@@ -104,7 +104,16 @@ class SpiderSina {
 			$stock = 'sz'.$stock;
 		}
 
-		$res = file_get_contents(self::URI_STOCK.'?q='.$stock);
+		$ch = curl_init();
+		curl_setopt_array($ch, array(
+			CURLOPT_FOLLOWLOCATION	=> 1,
+			CURLOPT_TIMEOUT			=> 10,
+			CURLOPT_RETURNTRANSFER	=> 1,
+			CURLOPT_URL				=> self::URI_STOCK.'?q='.$stock,
+			CURLOPT_USERAGENT		=> 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_5) AppleWebKit/536.30.1 (KHTML, like Gecko) Version/6.0.5 Safari/536.30.1',
+			));
+		$res = curl_exec($ch);
+		curl_close($ch);
 		$res = iconv('GBK', 'UTF-8', $res);
 		// parse result
 		$ds = explode('~', $res);
