@@ -67,7 +67,7 @@ class WechatTool {
 			'condition'	=> 'wechat_open_id=:open_id',
 			'params'	=> array(':open_id'=>$openId),
 		);
-		$rs = UserAr::model()->find($term)->cache(120);
+		$rs = UserAr::model()->cache(120)->find($term);
 		if (!$rs){
 			return false;
 		} else {
