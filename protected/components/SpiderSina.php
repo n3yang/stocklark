@@ -124,7 +124,7 @@ class SpiderSina {
 			'total_v'	=> $ds[45], // 总市值
 			'cmv'		=> $ds[44], // 流通市值
 			'swing'		=> $ds[43], // 振幅
-			'change_r'	=> $ds[38], // 换手率
+			'exchange'	=> $ds[38], // 换手率
 			'pb'		=> $ds[46], // 市净率
 			'ttm'		=> $ds[39], // 市盈率
 			'update'	=> strtotime($ds[30]),
