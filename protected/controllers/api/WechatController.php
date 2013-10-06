@@ -35,24 +35,7 @@ class WechatController extends Controller
 				$content =& $wechatObj->getRevContent();
 				/*************************************/
 				if (preg_match('/^[0,2,3,6,9]\d{5}$/', $content)){
-							$s = new SinaSpider;
-		$stock = $s->getStock($sid);
-		$message = "名  称：".$stock['name']."\n"
-			.'涨  跌：'.$stock['open']."\n"
-			.'当  前：'.$stock['current']."\n"
-			.'今  开：'.$stock['open']."\n"
-			.'最  高：'.$stock['max']."\n"
-			.'最  低：'.$stock['min']."\n"
-			.'昨  收：'.$stock['yestoday']."\n"
-			.'成交量：'.$stock['turnover']."\n"
-			.'成交额：'.$stock['turnover_v']."\n"
-			.'总市值：'.$stock['total_v']."\n"
-			.'振  幅：'.$stock['swing']."\n"
-			.'换手率：'.$stock['exchange']."\n"
-			.'市净率：'.$stock['pb']."\n"
-			.'市盈率：'.$stock['ttm']."\n"
-			.'更新时间：'.date('Y-m-d H:i:s', strtotime($stock['update']));
-		$this->oWechat->text($message)->reply();
+					$this->replyStock($content);
 				}
 				/***********************************************************************************/
 				elseif (strstr($content,"3")) {
@@ -91,7 +74,7 @@ class WechatController extends Controller
 
 	public function replyStock($sid)
 	{
-		$s = new SinaSpider;
+		$s = new SpiderSina;
 		$stock = $s->getStock($sid);
 		$message = "名  称：".$stock['name']."\n"
 			.'涨  跌：'.$stock['open']."\n"
