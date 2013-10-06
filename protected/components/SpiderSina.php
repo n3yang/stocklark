@@ -4,10 +4,10 @@
  */
 class SpiderSina {
 	
-
 	const URI_TRADE = 'http://stock.finance.sina.com.cn/match/api/openapi.php/TouGuDaSai_Service.getTranslation';
 	const URI_PLAYER = 'http://stock.finance.sina.com.cn/match/api/openapi.php/TouGuDaSai_Service.getZongHeShouYi';
 	const URI_TRADE_BY_UID = 'http://stock.finance.sina.com.cn/match/api/openapi.php/Order_Service.getTransaction';
+	const URI_STOCK = 'http://qt.gtimg.cn/';
 
 	protected $cid = '';
 	public function __construct()
@@ -91,8 +91,51 @@ class SpiderSina {
 		return $result['result']['data'];
 	}
 
+	public function getStock($stock)
+	{
+		if (!$stock) {
+			return false;
+		}
+
+		if (preg_match('/^[6,9]\d{5}$/', $stock)){
+			$stock = 'sh'.$stock;
+		}
+		if (preg_match('/^[0,2,3]\d{5}$/', $stock)){
+			$stock = 'sz'.$stock;
+		}
+
+		$res = file_get_contents(self::URI_STOCK.'?q='.$stock);
+		$res = iconv('GBK', 'UTF-8', $res);
+		// parse result
+		$ds = explode('~', $res);
+		if (empty($ds[1])) {
+			return '';
+		}
+		$stock = array(
+			'name'		=> $ds[1],
+			'code'		=> $ds[2],
+			'current'	=> $ds[3],
+			'yestoday'	=> $ds[4],
+			'open'		=> $ds[5],
+			'max'		=> $ds[33], // 41 最高价
+			'min'		=> $ds[34], // 42 
+			'turnover'	=> number_format($ds[6]/10000, 2, '.', ''), //turnover 万手
+			'turnover_v'=> number_format($ds[37], 2, '.', ''), // wan元 //bug
+			'total_v'	=> $ds[45], // 总市值
+			'cmv'		=> $ds[44], // 流通市值
+			'swing'		=> $ds[43], // 振幅
+			'change_r'	=> $ds[38], // 换手率
+			'pb'		=> $ds[46], // 市净率
+			'ttm'		=> $ds[39], // 市盈率
+			'update'	=> strtotime($ds[30]),
+		);
+
+		return $stock;
+	}
+
 	private function log($text, $method='', $level='error')
 	{
 		Yii::log(__CLASS__.':'.$method.':'.$text, $level);
 	}
 }
+
