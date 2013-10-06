@@ -20,7 +20,7 @@ class WechatController extends Controller
 		// Yii::log(var_export($_REQUEST, 1), 'info');
 		// Yii::log(file_get_contents("php://input"), 'info');
 		// check token
-		$wechatObj &= $this->oWechat;
+		$wechatObj = &$this->oWechat;
 		if (!$wechatObj->valid(true)){
 			return ;
 		}
