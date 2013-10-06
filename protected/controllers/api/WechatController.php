@@ -49,9 +49,9 @@ class WechatController extends Controller
 					$this->replyHelp();
 				}
 				/********** 模糊查询股票信息 **********/
-				else if (preg_match('/^[a-zA-Z]]{3,4}$/', $content)
+				else if (preg_match('/^[a-zA-Z]{3,4}$/', $content)
 					|| preg_match('/^[\x{4e00}-\x{9fa5}]{3,4}$/u', $content)) {
-					$this->replyStockSmarty();
+					$this->replyStockSmarty($content);
 				}
 				/********** default help info **********/
 				else {
