@@ -10,6 +10,8 @@ class SpiderSina {
 	const URI_STOCK = 'http://qt.gtimg.cn/';
 	const URI_STOCK_SMARTY = 'http://smartbox.gtimg.cn/s3/';
 
+	const CKEY_SMARTY_STOCK = 'SMARTY_STOCK';
+
 	protected $cid = '';
 	public function __construct()
 	{
@@ -139,9 +141,18 @@ class SpiderSina {
 		if (!$str) {
 			return false;
 		}
-		$res = $this->getHttp(self::URI_STOCK_SMARTY.'?q='.urlencode($str).'&t=gp');
-		$ds = explode('~', $res);
-		return empty($ds[1]) ? '' : $ds[1];
+		$ckey = self::CKEY_SMARTY_STOCK . '_' . md5($str);
+		$sid = Yii::app()->cache->get($ckey);
+		if (!$sid) {
+			$res = $this->getHttp(self::URI_STOCK_SMARTY.'?q='.urlencode($str).'&t=gp');
+			$ds = explode('~', $res);
+			if (!empty($ds[1])){
+				Yii::app()->cache->set($ckey, $ds[1], 1800);
+				$sid = $ds[1];
+			}
+		}
+		
+		return empty($sid) ? '' : $sid;
 	}
 
 	private function getHttp($url){

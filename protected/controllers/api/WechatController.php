@@ -84,22 +84,22 @@ class WechatController extends Controller
 		if (!$stock) {
 			$message = '没有查询到相应的股票信息，请重新输入股票代码，如问题依旧，回复“建议：+内容”反馈给我们，谢谢！';
 		} else {
-			$up = $stock['current']-$stock['yestoday'];
+			$up = number_format($stock['current']-$stock['yestoday'], 2);
 			$rate = $stock['yestoday']==0 ? '' : '('.number_format(($up/$stock['yestoday'])*100, 2).'%)';
 			$message = $stock['name']."\n"
 				.'上涨: '."$up $rate\n"
 				.'当前: '.$stock['current']."\n"
-				.'今开: '.$stock['open']."   ".'昨收: '.$stock['yestoday']."\n"
-				.'最高: '.$stock['max']."   ".'最低: '.$stock['min']."\n"
+				.'今开: '.$stock['open']."　".'昨收: '.$stock['yestoday']."\n"
+				.'最高: '.$stock['max']."　".'最低: '.$stock['min']."\n"
 				.'成交量: '.$stock['turnover']."万手\n"
 				.'成交额: '.$stock['turnover_v']."万元\n"
 				.'总市值: '.$stock['total_v']."亿元\n"
-				.'振  幅: '.$stock['swing']."%\n"
+				.'振　幅: '.$stock['swing']."%\n"
 				.'换手率: '.$stock['exchange']."%\n"
 				.'市净率: '.$stock['pb']."%\n"
 				.'市盈率: '.$stock['ttm']."%\n"
 				.'更新时间: '.date('m.d H:i:s', $stock['update']);
-		}
+		} 
 		$this->oWechat->text($message)->reply();
 	}
 
