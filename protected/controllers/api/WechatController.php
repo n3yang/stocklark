@@ -156,6 +156,7 @@ class WechatController extends Controller
 			}
 		}
 		$i = 1;
+		$message = '';
 		foreach ($messages as $v) {
 			$message.= $i.'. '.$v."\n";
 			$i++;
@@ -168,8 +169,9 @@ class WechatController extends Controller
 		$criteria = array('limit'=>5, 'order'=>'profit_ratio_total desc');
 		$pas = PlayerAr::model()->findAll($criteria);
 		$i = 1;
+		$message = '';
 		foreach ($pas as $pa) {
-			$message = $i . '. ' . $pa->name . '，总收益：' . $pa->profit_ratio_total . '%，20天收益：' . $pa->profit_ratio_20 . "\n";
+			$message .= $i . '. ' . $pa->name . '，总收益：' . $pa->profit_ratio_total . '%，20天收益：' . $pa->profit_ratio_d20 . "\n";
 		}
 		$message = "新浪投顾大赛推荐订阅：\n" . $message;
 		$this->oWechat->text($message)->reply();
