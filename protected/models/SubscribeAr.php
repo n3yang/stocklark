@@ -14,6 +14,9 @@
  */
 class SubscribeAr extends CActiveRecord
 {
+	const TYPE_SINA_GAME_PLAYER = 1;
+	const TYPE_SINA_GAME_STOCK = 2;
+
 	/**
 	 * Returns the static model of the specified AR class.
 	 * @param string $className active record class name.

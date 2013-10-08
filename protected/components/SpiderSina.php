@@ -10,7 +10,7 @@ class SpiderSina {
 	const URI_STOCK = 'http://qt.gtimg.cn/';
 	const URI_STOCK_SMARTY = 'http://smartbox.gtimg.cn/s3/';
 
-	const CKEY_SMARTY_STOCK = 'SMARTY_STOCK';
+	const CKEY_STOCK_SMARTY = 'STOCK_SMARTY';
 
 	protected $cid = '';
 	public function __construct()
@@ -141,7 +141,7 @@ class SpiderSina {
 		if (!$str) {
 			return false;
 		}
-		$ckey = self::CKEY_SMARTY_STOCK . '_' . md5($str);
+		$ckey = self::CKEY_STOCK_SMARTY . '_' . md5($str);
 		$sid = Yii::app()->cache->get($ckey);
 		if (!$sid) {
 			$res = $this->getHttp(self::URI_STOCK_SMARTY.'?q='.urlencode($str).'&t=gp');

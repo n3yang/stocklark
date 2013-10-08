@@ -37,6 +37,14 @@ class WechatController extends Controller
 				if (preg_match('/^[0,2,3,6,9]\d{5}$/', $content)){
 					$this->replyStock($content);
 				}
+				/********** my subscribe **********/
+				elseif (substr($content, "1") || substr($content, "我的订阅")) {
+					$this->replyMySubscribe($wechatObj->getRevFrom());
+				}
+				/********** recommand **********/
+				elseif (substr($content, "2") || substr($content, "推荐订阅")) {
+					$this->replyRecommend();
+				}
 				/********** spicel code **********/
 				elseif (strstr($content,"3")) {
 					$wechatObj->text("老大你好啊，您辛苦啦！")->reply();
@@ -79,6 +87,7 @@ class WechatController extends Controller
 
 	protected function replyStock($sid)
 	{
+		Yii::log('Receiving stock request: '.$sid, 'trace');
 		$s = new SpiderSina;
 		$stock = $s->getStock($sid);
 		if (!$stock) {
@@ -99,22 +108,70 @@ class WechatController extends Controller
 				.'市净率: '.$stock['pb']."%\n"
 				.'市盈率: '.$stock['ttm']."%\n"
 				.'更新时间: '.date('m.d H:i:s', $stock['update']);
-		} 
+		}
 		$this->oWechat->text($message)->reply();
 	}
 
 	protected function replyStockSmarty($str)
 	{
+		Yii::log('Receiving stock smarty request: '.$str, 'trace');
 		$s = new SpiderSina;
 		return $this->replyStock($s->getStockIdSmarty($str));
 	}
 
 	protected function replyHelp()
 	{
-		$message = "您可以回复下述指令以获得更多信息：\n"
+		$message = "您可以回复下述指令以查询更多信息：\n"
 			."我的订阅（或数字“1”）\n"
 			."推荐订阅（或数字“2”）\n"
-			."股票代码（如：”000001“或”payh“或”平安银行“）";
+			."股票代码（如：“000001”或“payh”或“平安银行”）";
+		$this->oWechat->text($message)->reply();
+	}
+
+	protected function replyMySubscribe($openId)
+	{
+		$ua = UserAr::model()->findByAttributes(array('wechat_open_id'=>$openId));
+		if (!$ua) {
+			$this->oWechat->text('未找到匹配数据')->reply();
+			return false;
+		}
+		$sas = SubscribeAr::model()->findAllByAttributes(array('user_id'=>$ua->id));
+		if (!$sas){
+			$this->oWechat->text("您还没有任何订阅信息。\n回复数字“2”即可查看推荐订阅，赶快试试吧！")->reply();
+			return false;
+		}
+		foreach ($sas as $sa) {
+			if ($sa->type == SubscribeAr::TYPE_SINA_GAME_PLAYER) {
+				$attributes = array(
+					'source'		=> 'sina',
+					'source_uid'	=> $sa->feature,
+				);
+				$pa = PlayerAr::model()->findByAttributes($attributes);
+				$messages[] = '新浪投顾大赛选手：'.$pa->name. '，到期日：' . date('Y.m.d', strtotime($sa->time_over));
+			}
+			// TODO
+			if ($sa->type == SubscribeAr::TYPE_SINA_GAME_STOCK) {
+				$stockIds[] = $sa->feature;
+				$messages[] = '新浪投顾大赛股票：'.$sa->feature. '，到期日：' . date('Y.m.d', strtotime($sa->time_over));
+			}
+		}
+		$i = 1;
+		foreach ($messages as $v) {
+			$message.= $i.'. '.$v."\n";
+			$i++;
+		}
+		$this->oWechat->text($message)->reply();
+	}
+
+	protected function replyRecommend()
+	{
+		$criteria = array('limit'=>5, 'order'=>'profit_ratio_total desc');
+		$pas = PlayerAr::model()->findAll($criteria);
+		$i = 1;
+		foreach ($pas as $pa) {
+			$message = $i . '. ' . $pa->name . '，总收益：' . $pa->profit_ratio_total . '%，20天收益：' . $pa->profit_ratio_20 . "\n";
+		}
+		$message = "新浪投顾大赛推荐订阅：\n" . $message;
 		$this->oWechat->text($message)->reply();
 	}
 
