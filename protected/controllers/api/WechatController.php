@@ -172,6 +172,7 @@ class WechatController extends Controller
 		$message = '';
 		foreach ($pas as $pa) {
 			$message .= $i . '. ' . $pa->name . '，总收益：' . $pa->profit_ratio_total . '%，20天收益：' . $pa->profit_ratio_d20 . "\n";
+			$i++;
 		}
 		$message = "新浪投顾大赛推荐订阅：\n" . $message;
 		$this->oWechat->text($message)->reply();
