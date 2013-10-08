@@ -38,11 +38,11 @@ class WechatController extends Controller
 					$this->replyStock($content);
 				}
 				/********** my subscribe **********/
-				elseif (substr($content, "1") || substr($content, "我的订阅")) {
+				elseif (strstr($content, "1") || strstr($content, "我的订阅")) {
 					$this->replyMySubscribe($wechatObj->getRevFrom());
 				}
 				/********** recommand **********/
-				elseif (substr($content, "2") || substr($content, "推荐订阅")) {
+				elseif (strstr($content, "2") || strstr($content, "推荐订阅")) {
 					$this->replyRecommend();
 				}
 				/********** spicel code **********/
