@@ -174,6 +174,3 @@ class SpiderSina {
 		Yii::log(__CLASS__.':'.$method.':'.$text, $level);
 	}
 }
-
-
-new SpiderSina;
