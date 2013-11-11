@@ -70,6 +70,34 @@ Class WechatCom extends Wechat
 	}
 
 
-
+    /**
+     * 2013.11.11更新：微信开放平台升级，兼容获取用户信息。
+     * TODO：同时开放获取用户详情API，此方式可以更新。
+     * 
+     * 获取用户的信息
+     * @param  string $fakeid 用户的fakeid
+     * @param string $session
+     * @return mixed 如果成功获取返回数据数组，登录问题返回false，其他未知问题返回true，
+     */
+    public function getContactInfo($fakeid, $session=null)
+    {
+        $this->processSession($session);
+        $url = $this->protocol."://mp.weixin.qq.com/cgi-bin/getcontactinfo?t=ajax-getcontactinfo&lang=zh_CN&fakeid=".$fakeid;
+        $this->curlInit("single");
+        $postfields = array("token"=>$this->webtoken, "ajax"=>1);
+        $response = $this->_curlHttpObject->post($url, $postfields, $this->protocol."://mp.weixin.qq.com/", $this->_cookies[$session]);
+        $result = json_decode($response, 1);
+        if($result['contact_info']['fake_id']){
+            return $result['contact_info'];
+        }
+        elseif ($result['base_resp']['ret'])
+        {
+            return false;
+        }
+        else
+        {
+            return false;
+        }
+    }
 
 }
