@@ -854,7 +854,7 @@ class Wechat {
      * @param string $session 会话通道
      * @return integer 返回发送结果：成功返回:1,登录问题返回:-1;需要验证码:-6;其他
      */
-    private function _send($fakeid, $content, $type=null, $imgcode="fuck", $session=null)
+    private function _send($fakeid, $content, $type=null, $imgcode="", $session=null)
     {
         $this->processSession($session);
         if($type==null)
