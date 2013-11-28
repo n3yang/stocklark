@@ -164,7 +164,7 @@ class Wechat {
         $this->webtoken = (string)$this->getToken();
         return $this;
     }
-    private function curlInit($type=null, $option=null) {
+    protected function curlInit($type=null, $option=null) {
         if (!isset($this->_curlHttpObject)) {
             $this->_curlHttpObject = new CurlHttp();
         }
@@ -181,7 +181,7 @@ class Wechat {
      * 验证请求签名操作
      * @return boolean
      */
-    private function checkSignature()
+    protected function checkSignature()
     {
         $signature = $_GET["signature"];
         $timestamp = $_GET["timestamp"];
@@ -280,7 +280,7 @@ class Wechat {
         return $this;
     }
 
-    private function log($log){
+    protected function log($log){
         if ($this->debug && function_exists($this->_logcallback)) {
             if (is_array($log)) $log = print_r($log,true);
             return call_user_func($this->_logcallback,$log);
@@ -495,7 +495,7 @@ class Wechat {
      * @param string $encoding 数据编码
      * @return string
      */
-    private function xml_encode($data, $root='xml', $item='item', $attr='', $id='id', $encoding='utf-8') {
+    protected function xml_encode($data, $root='xml', $item='item', $attr='', $id='id', $encoding='utf-8') {
         if(is_array($attr)){
             $_attr = array();
             foreach ($attr as $key => $value) {
@@ -667,7 +667,7 @@ class Wechat {
     /**
      * @name 执行关联动作
      */
-    // private function doAssociationAction()
+    // protected function doAssociationAction()
     protected function doAssociationAction()
     {
         //var_dump($this->_passiveAssociationSwitch && Wechat::MSGTYPE_EVENT!=$this->getRevType() &&    is_object($this->_wechatcallbackFuns) && method_exists($this->_wechatcallbackFuns, "getAscStatusByOpenid") && method_exists($this->_wechatcallbackFuns, "setAssociation") && !$this->_wechatcallbackFuns->getAscStatusByOpenid($this->getRevFrom()));
@@ -854,7 +854,7 @@ class Wechat {
      * @param string $session 会话通道
      * @return integer 返回发送结果：成功返回:1,登录问题返回:-1;需要验证码:-6;其他
      */
-    private function _send($fakeid, $content, $type=null, $imgcode="", $session=null)
+    protected function _send($fakeid, $content, $type=null, $imgcode="", $session=null)
     {
         $this->processSession($session);
         if($type==null)
@@ -944,7 +944,7 @@ class Wechat {
      * @param integer $queueCount 并发数量,默认10
      * @return array  返回一个记录发送结果的数组列表
      **/
-    private function doQueueSend($queueSendArray, $queueCount=10)
+    protected function doQueueSend($queueSendArray, $queueCount=10)
     {
         $requestArray = array();
         foreach ($queueSendArray as $key =>$value)
@@ -1835,7 +1835,7 @@ class Wechat {
      * @param $singleMessageFields 单挑表单数组
      * @return array
      */
-    private function buildPositiveMsgFields($singleMessageFields)
+    protected function buildPositiveMsgFields($singleMessageFields)
     {
         if(!isset($singleMessageFields['type']))
         {
@@ -1894,7 +1894,7 @@ class Wechat {
      * @param string $msgType 消息类型，如 Wechat::MSGTYPE_TEXT
      * @return bool|int 正确返回值，否则返回false
      */
-    private function getPositiveMsgType($msgType)
+    protected function getPositiveMsgType($msgType)
     {
 //        if(array_keys(Wechat::$POSITIVE_MSGTYPE, $msgType))
 //        {
@@ -1909,7 +1909,7 @@ class Wechat {
     /**
      * @param $session
      */
-    private function processSession(&$session)
+    protected function processSession(&$session)
     {
         if (empty($session)) {
             if (empty($this->wechatOptions['session'])) {
@@ -2010,7 +2010,7 @@ class CurlHttp {
      * @param $result
      * @return string
      */
-    private function getResRawHeader($ch, $result) {
+    protected function getResRawHeader($ch, $result) {
         $ch_info = curl_getinfo($ch);
         $header_size = $ch_info["header_size"];
         $rawheader = substr($result, 0, $ch_info['header_size']);
@@ -2023,7 +2023,7 @@ class CurlHttp {
      * @param $result
      * @return string
      */
-    private function getResHeader($ch, $result) {
+    protected function getResHeader($ch, $result) {
         $header = array();
         $rawheader = $this->getResRawHeader($ch, $result);
         if(preg_match_all('/([^:\s]+): (.*)/i', $rawheader, $header_match)){
@@ -2040,7 +2040,7 @@ class CurlHttp {
      * @param $result
      * @return string 网页主体内容
      */
-    private function getResBody($ch, $result) {
+    protected function getResBody($ch, $result) {
         $ch_info = curl_getinfo($ch);
         $body = substr($result, -$ch_info['download_content_length']);
         return $body;
@@ -2052,7 +2052,7 @@ class CurlHttp {
      * @param $result
      * @return array 网页主体内容
      */
-    private function getResCookies($ch, $result) {
+    protected function getResCookies($ch, $result) {
         $rawheader = $this->getResRawHeader($ch, $result);
         $cookies = array();
         if(preg_match_all('/Set-Cookie:(?:\s*)([^=]*?)=([^\;]*?);/i', $rawheader, $cookie_match)){
@@ -2063,7 +2063,7 @@ class CurlHttp {
         return $cookies;
     }
 
-    private function setReqCookies($ch, $reqcookies = array()) {
+    protected function setReqCookies($ch, $reqcookies = array()) {
         $reqCookiesString = "";
         if(!empty($reqcookies)){
             if(is_array($reqcookies)){
@@ -2079,7 +2079,7 @@ class CurlHttp {
             curl_setopt($ch, CURLOPT_COOKIE, $reqCookiesString);
         }
     }
-    private function setResCookies($ch) {
+    protected function setResCookies($ch) {
         if(!empty($reqcookies)&&is_array($reqcookies)){
             $this->_cookies = array_merge($this->_cookies, $reqcookies);
         }
@@ -2276,7 +2276,7 @@ class CurlHttp {
      * @param map
      * @param keyvalue
      */
-    private function addToRollQueue($requestArray, $keyvalue, &$map) {
+    protected function addToRollQueue($requestArray, $keyvalue, &$map) {
         $ch = curl_init();
         curl_setopt_array($ch, $this->_rolloptions);
         //检查提交方式，并设置对应的设置，为空的话默认采用get方式
@@ -2366,7 +2366,7 @@ class CurlHttp {
      * @param array $reqheader
      * @return $this
      */
-    private function setReqheader($ch, $reqheader) {
+    protected function setReqheader($ch, $reqheader) {
         $reqheader = array_merge($this->_reqheader, $reqheader);
         if (is_array($reqheader)) {
             $rawReqHeader = array();
