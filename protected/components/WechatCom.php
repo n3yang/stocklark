@@ -100,4 +100,18 @@ Class WechatCom extends Wechat
         }
     }
 
+    /**
+     * 主动单条发消息
+     * @param $fakeid
+     * @param  string $content 发送的内容
+     * @param string $type
+     * @param string $imgcode 验证码
+     * @param string $session 会话通道
+     * @return integer 返回发送结果：成功返回:1,登录问题返回:-1,;需要验证码:-6; 其他原因返回:0
+     */
+    public function send($fakeid, $content, $type=Wechat::MSGTYPE_TEXT, $imgcode="", $session=null)
+    {
+        $this->processSession($session);
+        return $this->_send($fakeid, $content, $type, $imgcode, $session);
+    }
 }
