@@ -877,7 +877,7 @@ class Wechat {
             $response = $this->_curlHttpObject->post($url, $postfields, $this->protocol."://mp.weixin.qq.com/cgi-bin/singlemsgpage?", $this->_cookies[$session]);
             $tmp = json_decode($response,true);
             //判断发送结果的逻辑部分
-            if ('ok'==$tmp["msg"]) {
+            if ('ok'==$tmp["err_msg"]) {
                 return 1;
             }
             elseif ($tmp['ret']=="-2000")
