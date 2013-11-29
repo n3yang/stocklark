@@ -111,7 +111,10 @@ Class WechatCom extends Wechat
      */
     public function send($fakeid, $content, $type=Wechat::MSGTYPE_TEXT, $imgcode="", $session=null)
     {
+    	Yii::log('fakeid:'.$fakeid.'  content:'.$content, 'info');
         $this->processSession($session);
-        return $this->_send($fakeid, $content, $type, $imgcode, $session);
+        $rs = $this->_send($fakeid, $content, $type, $imgcode, $session);
+        Yii::log('fakeid:'.$fakeid.'  return:'.$rs, 'info');
+        return $rs;
     }
 }

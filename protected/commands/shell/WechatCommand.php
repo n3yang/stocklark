@@ -57,7 +57,7 @@ class WechatCommand extends CConsoleCommand {
 				// 返回发送结果：成功返回:1,登录问题返回:-1;需要验证码:-6;其他
 				$singleresult = $wechatObj->send($message->user->wechat_fake_id, $message->content);
 				if ($singleresult==1){
-					$message->status = MessageQueueAr::STATUS_SUCESS;	
+					$message->status = MessageQueueAr::STATUS_SUCESS;
 				} else {
 					$message->status = MessageQueueAr::STATUS_FAULT;
 				}
