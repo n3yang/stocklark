@@ -19,7 +19,13 @@ Class WechatCom extends Wechat
 		return parent::__construct($option);
 	}
 
-
+	protected function log($message='')
+	{
+		if ($this->debug) {
+			Yii::log('Receiving stock request: '.var_export($message, 1), 'debug');
+		}
+		return null;
+	}
 
 	/**
 	 * do association action when receiving a message from wechat server
@@ -111,7 +117,7 @@ Class WechatCom extends Wechat
      */
     public function send($fakeid, $content, $type=Wechat::MSGTYPE_TEXT, $imgcode="", $session=null)
     {
-    	Yii::log('fakeid:'.$fakeid.'  content:'.$content, 'info');
+        Yii::log('fakeid:'.$fakeid.'  content:'.$content, 'info');
         $this->processSession($session);
         $rs = $this->_send($fakeid, $content, $type, $imgcode, $session);
         Yii::log('fakeid:'.$fakeid.'  return:'.$rs, 'info');
