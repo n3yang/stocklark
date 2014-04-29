@@ -123,4 +123,41 @@ Class WechatCom extends Wechat
         Yii::log('fakeid:'.$fakeid.'  return:'.$rs, 'info');
         return $rs;
     }
+
+
+    /**
+     * 2014.04.29 修改返回判断条件，基类方法已失效
+     * 
+     * 登录微信公共平台，获取并保存cookie、webtoken到指定文件
+     * @param string $session
+     * @return mixed 成功则返回true，失败则返回失败代码
+     */
+    public function login($session=null)
+    {
+        $this->processSession($session);
+        $url = $this->protocol."://mp.weixin.qq.com/cgi-bin/login?lang=zh_CN";
+        $postfields["username"] = $this->wechatOptions['account'];
+        $postfields["pwd"] = md5($this->wechatOptions['password']);
+        $postfields["f"] = "json";
+        $postfieldss = "username=".urlencode($this->wechatOptions['account'])."&pwd=".urlencode(md5($this->wechatOptions['password']))."&f=json";
+
+        $this->curlInit("single");
+        $response = $this->_curlHttpObject->post($url, $postfields, $this->protocol."://mp.weixin.qq.com/cgi-bin/login", $this->_cookies[$session]);
+        $result = json_decode($response, true);
+        if ($result['base_resp']['err_msg']=="65201"
+            ||$result['base_resp']['err_msg']=="65202"
+            ||$result['base_resp']['err_msg']=="ok")
+        {
+            preg_match('/&token=([\d]+)/i', $result['redirect_url'], $match);
+            $this->webtoken = $match[1];
+            $this->setToken($this->webtoken);
+            $this->setCookies($this->_curlHttpObject->getCookies(),$session);
+            return true;
+        }
+        else
+        {
+        	// return false;
+            return $result['base_resp']['err_msg'];
+        }
+    }
 }
