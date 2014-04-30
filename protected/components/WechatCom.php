@@ -160,4 +160,57 @@ Class WechatCom extends Wechat
             return $result['base_resp']['err_msg'];
         }
     }
+
+
+    /**
+     * 2014.04.29 修改返回判断条件，基类方法已失效
+     * 
+     * 主动单条发消息
+     * @param $fakeid 消息接收人
+     * @param  string $content 发送的内容或多媒体内容的fid
+     * @param null $type 消息类型 默认：Wechat::MSGTYPE_TEXT
+     * @param string $imgcode 验证码
+     * @param string $session 会话通道
+     * @return integer 返回发送结果：成功返回:1,登录问题返回:-1;需要验证码:-6;其他
+     */
+    protected function _send($fakeid, $content, $type=null, $imgcode="", $session=null)
+    {
+        $this->processSession($session);
+        if($type==null)
+        {
+            $type = Wechat::MSGTYPE_TEXT;
+        }
+        //判断cookie是否为空，为空的话自动执行登录
+        if ($this->_cookies[$session]||true===$this->login($session))
+        {
+            $singleMessgae = array();
+            $singleMessgae['fakeid'] = $fakeid;
+            $singleMessgae['content'] = $content;
+            $singleMessgae['imgcode'] = $imgcode;
+            $singleMessgae['fid'] = $content;
+            $singleMessgae['type'] = $type;
+            $postfields = $this->buildPositiveMsgFields($singleMessgae);
+            $url = $this->protocol."://mp.weixin.qq.com/cgi-bin/singlesend?t=ajax-response";
+            $this->curlInit("single");
+            $response = $this->_curlHttpObject->post($url, $postfields, $this->protocol."://mp.weixin.qq.com/cgi-bin/singlemsgpage?", $this->_cookies[$session]);
+            $tmp = json_decode($response,true);
+            //判断发送结果的逻辑部分
+            if ('ok'==$tmp['base_resp']["err_msg"]) {
+                return 1;
+            }
+            elseif ($tmp['base_resp']['ret']=="-2000")
+            {
+                return -1;
+            }
+            else
+            {
+                return $tmp['ret'];
+            }
+        }
+        else  //登录失败返回false
+        {
+            return 0;
+        }
+
+    }
 }
