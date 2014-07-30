@@ -45,7 +45,7 @@ Class WechatCom extends Wechat
 			$user = $this->_wechatcallbackFuns->getAscStatusByOpenid($this->getRevFrom());
 			if (!$user['wechat_fake_id'] || time()-strtotime($user['time_update']) > 86400)
 			{
-				$messageList = $this->getMessage(0, 40, 0);
+				$messageList = $this->getMessage(0, 10, 0);
 				if ($messageList)
 				{
 					$count = 0;
@@ -204,7 +204,7 @@ Class WechatCom extends Wechat
             }
             else
             {
-                return $tmp['ret'];
+                return $tmp['base_resp']['ret'];
             }
         }
         else  //登录失败返回false
@@ -213,4 +213,6 @@ Class WechatCom extends Wechat
         }
 
     }
+
+
 }
