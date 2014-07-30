@@ -118,6 +118,7 @@ class WechatTool {
 		);
 		$ua = UserAr::model()->find($condition);
 		if (!$ua){
+			$ua = new UserAr;
 			$ua->wechat_open_id = $openId;
 			$ua->wechat_fake_id = $fakeId;
 			$ua->name = $detailInfo['nick_name'];
