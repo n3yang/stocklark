@@ -118,13 +118,14 @@ class WechatTool {
 		);
 		$ua = UserAr::model()->find($condition);
 		if (!$ua){
-			return false;
-		} else {
+			$ua->wechat_open_id = $openId;
 			$ua->wechat_fake_id = $fakeId;
 			$ua->name = $detailInfo['nick_name'];
 			$ua->gender = $detailInfo['gender'];
 			$ua->time_update = new CDbExpression('NOW()');
 			return $ua->save();
+		} else {
+			return true;
 		}
 	}
 
